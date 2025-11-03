@@ -1,0 +1,33 @@
+# Pfizer Territory Optimization - Python Dependencies
+# Install with: pip install -r requirements.txt
+
+# ============================================================================
+# Core Optimization
+# ============================================================================
+gurobipy>=11.0.0        # Optimization solver (requires license)
+
+# ============================================================================
+# Data Processing & Analysis
+# ============================================================================
+pandas>=2.0.0           # Data manipulation
+numpy>=1.24.0           # Numerical computing
+openpyxl>=3.1.0         # Excel file reading
+
+# ============================================================================
+# Visualization
+# ============================================================================
+matplotlib>=3.7.0       # Plotting library
+seaborn>=0.12.0         # Statistical visualizations
+
+# ============================================================================
+# Jupyter (optional - for notebooks)
+# ============================================================================
+jupyter>=1.0.0          # Jupyter notebook support
+ipykernel>=6.0.0        # IPython kernel
+
+# ============================================================================
+# Development Tools (optional)
+# ============================================================================
+# pytest>=7.0.0         # Unit testing framework
+# black>=23.0.0         # Code formatting
+# flake8>=6.0.0         # Code linting
