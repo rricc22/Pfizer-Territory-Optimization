@@ -1,4 +1,4 @@
-# Pfizer Territory Optimization
+# Pfizer Territory Optimization in Decision Modeling
 
 **Multi-Objective Optimization for Sales Representative Territory Assignment**
 
