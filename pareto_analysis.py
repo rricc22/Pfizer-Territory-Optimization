@@ -121,12 +121,15 @@ def plot_assignment_heatmap(solution: dict, title: str, output_file: str,
     plt.close()
 
 
-def plot_workload_comparison(solutions: dict, output_file: str):
+def plot_workload_comparison(solutions: dict, output_file: str, wl_min: float = 0.8, wl_max: float = 1.2):
     """
     Compare workload distributions across different solutions
     
     Args:
         solutions: Dict with solution names as keys, solution dicts as values
+        output_file: Output filename for plot
+        wl_min: Minimum workload bound for this scenario
+        wl_max: Maximum workload bound for this scenario
     """
     fig, axes = plt.subplots(1, len(solutions), figsize=(5*len(solutions), 5))
     
@@ -137,12 +140,13 @@ def plot_workload_comparison(solutions: dict, output_file: str):
         srs = sorted(sol['workloads'].keys())
         workloads = [sol['workloads'][j] for j in srs]
         
-        colors = ['#2E86AB' if 0.8 <= w <= 1.2 else '#F18F01' for w in workloads]
+        # Color bars based on whether they're within the scenario's bounds
+        colors = ['#2E86AB' if wl_min <= w <= wl_max else '#F18F01' for w in workloads]
         
         axes[idx].bar([f'SR{j}' for j in srs], workloads, color=colors, alpha=0.7, edgecolor='black')
         axes[idx].axhline(y=1.0, color='green', linestyle='--', linewidth=2, label='Target (1.0)')
-        axes[idx].axhline(y=0.8, color='red', linestyle=':', linewidth=1.5, label='Min (0.8)')
-        axes[idx].axhline(y=1.2, color='red', linestyle=':', linewidth=1.5, label='Max (1.2)')
+        axes[idx].axhline(y=wl_min, color='red', linestyle=':', linewidth=1.5, label=f'Min ({wl_min:.2f})')
+        axes[idx].axhline(y=wl_max, color='red', linestyle=':', linewidth=1.5, label=f'Max ({wl_max:.2f})')
         
         axes[idx].set_title(name, fontsize=12, fontweight='bold')
         axes[idx].set_ylabel('Workload', fontsize=11)
@@ -150,7 +154,8 @@ def plot_workload_comparison(solutions: dict, output_file: str):
         axes[idx].legend(fontsize=9)
         axes[idx].grid(axis='y', alpha=0.3)
     
-    plt.suptitle('Workload Distribution Comparison', fontsize=14, fontweight='bold', y=1.02)
+    plt.suptitle(f'Workload Distribution Comparison\n[{wl_min:.2f}, {wl_max:.2f}] bounds', 
+                 fontsize=14, fontweight='bold', y=1.02)
     plt.tight_layout()
     plt.savefig(output_file, dpi=300, bbox_inches='tight')
     print(f"✓ Saved workload comparison to {output_file}")
@@ -275,14 +280,14 @@ def main():
         plot_individual_pareto(df, scenario_name, filename)
     
     # 3. Workload comparisons
-    for scenario_name in scenarios.keys():
+    for scenario_name, (wl_min, wl_max) in scenarios.items():
         sol_dict = {
             'Min Distance': pareto_solutions[f"{scenario_name} - Min Distance"],
             'Min Disruption': pareto_solutions[f"{scenario_name} - Min Disruption"],
             'Current': current_sol
         }
         filename = f"workload_{scenario_name.replace(' ', '_').replace('[', '').replace(']', '').replace(',', '').replace(':', '')}.png"
-        plot_workload_comparison(sol_dict, filename)
+        plot_workload_comparison(sol_dict, filename, wl_min, wl_max)
     
     # 4. Assignment heatmaps for Scenario 1
     scenario1_name = 'Scenario 1: [0.8, 1.2]'
