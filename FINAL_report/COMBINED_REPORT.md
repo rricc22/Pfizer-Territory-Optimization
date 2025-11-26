@@ -146,16 +146,43 @@ To explore the complete trade-off spectrum, we implement the epsilon-constraint 
 
 3. Practical Solutions: Solutions at disruption ~0.30 represent optimal balance: 10-12% distance reduction while maintaining 70-75% of current assignments. These solutions typically involve 6-8 brick transfers, primarily affecting border territories.
 
-### 3.4 Assignment Pattern Analysis
+### 3.4 Individual Scenario Analysis
 
-![Assignment Heatmap Comparison](../STEP1_Graph/assignment_heatmap_scenario1_mindist.png)
-*Figure 2: Assignment heatmap for minimum distance solution showing geographic clustering patterns.*
+The three workload scenarios provide detailed insights into how constraint flexibility affects solution quality.
+<div style="page-break-after: always;"></div>
 
-The heatmaps reveal two distinct optimization strategies:
+#### Scenario 1: High Flexibility [0.8, 1.2]
 
-Minimum Distance Strategy: Creates compact, geographically contiguous territories. SR3 (office at brick 16) expands to cover bricks 10, 15-18, forming a dense central cluster. SR1 handles western territories (4-9, 12, 19-20). This configuration minimizes travel but disrupts 9 assignments.
+![Pareto Frontier Scenario 1](../STEP1_Graph/pareto_Scenario_1_0.8_1.2.png)
+*Figure 2a: Pareto frontier for workload bounds [0.8, 1.2] showing widest solution space*
 
-Minimum Disruption Strategy: Preserves the current structure with targeted adjustments. Only bricks 10-11 transfer to balance workload while minimizing change. Territory shapes remain irregular, reflecting historical rather than geometric logic.
+This scenario generates 25 Pareto solutions spanning distance [165.96 km, 188.95 km] and disruption [0.1696, 0.5864]. The wide workload tolerance allows aggressive optimization, achieving the best distance performance (165.96 km, 11.5% improvement over current). However, workload imbalance increases: some SRs approach 1.2× average workload while others drop to 0.8×.
+
+![Workload Distribution Scenario 1](../STEP1_Graph/workload_Scenario_1_0.8_1.2.png)
+*Figure 2b: Workload distribution across Pareto solutions showing variance within [0.8, 1.2] bounds*
+
+<div style="page-break-after: always;"></div>
+
+#### Scenario 2: Medium Flexibility [0.85, 1.15]
+
+![Pareto Frontier Scenario 2](../STEP1_Graph/pareto_Scenario_2_0.85_1.15.png)
+*Figure 2c: Pareto frontier for workload bounds [0.85, 1.15] showing moderate constraint impact*
+
+With ±15% tolerance, the best distance increases to 171.68 km. The tighter constraints eliminate extreme solutions, producing a more conservative Pareto frontier. This scenario balances efficiency and fairness, suitable for organizations with moderate workload flexibility.
+
+![Workload Distribution Scenario 2](../STEP1_Graph/workload_Scenario_2_0.85_1.15.png)
+*Figure 2b: Workload distribution across Pareto solutions showing variance within [0.8, 1.2] bounds*
+<div style="page-break-after: always;"></div>
+
+#### Scenario 3: Strict Fairness [0.9, 1.1]
+
+![Pareto Frontier Scenario 3](../STEP1_Graph/pareto_Scenario_3_0.9_1.1.png)
+*Figure 2d: Pareto frontier for workload bounds [0.9, 1.1] showing tight workload distribution*
+
+The strictest scenario (±10%) produces identical results to Scenario 2 at this problem scale, suggesting the constraints have become binding. Workload variance drops significantly, ensuring near-perfect fairness. Organizations with union contracts or equity mandates should use this configuration.
+
+![Workload Distribution Scenario 3](../STEP1_Graph/workload_Scenario_3_0.9_1.1.png)
+*Figure 2b: Workload distribution across Pareto solutions showing variance within [0.8, 1.2] bounds*
 
 <div style="page-break-after: always;"></div>
 
@@ -183,9 +210,49 @@ Counterintuitively, larger instances solve faster due to problem structure and G
 ### 4.2 Pareto Frontier: 100×10 Instance
 
 We generated 20 Pareto solutions per scenario using epsilon-constraint across three workload flexibility levels (as in Section 3.3).
+<div style="page-break-after: always;"></div>
+
+#### Initial Analysis: Distance-Disruption Trade-off
+
+![Pareto Frontier - 100x10 Initial](../STEP2_Graph/pareto_100x10_frontier.png)
+*Figure 3a: Pareto frontier for 100 bricks × 10 SRs showing distance-disruption trade-off with workload variance indicated by color*
+
+The frontier reveals three distinct regions:
+- Steep region (disruption 0.7-2.0): Large distance savings (3-4 km) for small disruption increases
+- Moderate region (disruption 2.0-4.0): Balanced solutions achieving 10-15% distance improvement
+- Flat region (disruption 4.0-5.5): Diminishing returns with high organizational change
+
+![Trade-off Evolution](../STEP2_Graph/pareto_100x10_tradeoff.png)
+*Figure 3b: Dual-axis plot showing simultaneous evolution of distance and disruption objectives*
+
+#### Workload Balance Verification
+
+![Workload Metrics](../STEP2_Graph/pareto_100x10_workload.png)
+*Figure 3c: Workload metrics across all Pareto solutions confirming constraint satisfaction*
+
+All solutions maintain workload within [0.8, 1.2] bounds:
+- Maximum workload: 1.19-1.20 (near upper bound)
+- Minimum workload: 0.80-0.82 (near lower bound)  
+- Standard deviation: 0.13-0.16 (low variance indicates fair distribution)
+<div style="page-break-after: always;"></div>
+
+#### Reassignment Impact
+
+![Number of Changes](../STEP2_Graph/pareto_100x10_changes.png)
+*Figure 3d: Brick reassignments across Pareto solutions with color gradient indicating change magnitude*
+
+Reassignment patterns show strong correlation with disruption:
+- Minimum changes: 8 bricks (8%) at highest disruption tolerance
+- Maximum changes: 33 bricks (33%) at lowest disruption tolerance
+- Typical range: 15-25 bricks (15-25%)
+- Correlation coefficient r² > 0.95 confirms predictable trade-off
+
+<div style="page-break-after: always;"></div>
+
+#### Multi-Scenario Comparison
 
 ![Pareto Frontier - 100x10](../STEP2_Graph/pareto_comparison_scenarios.png)
-*Figure 3: Multi-scenario Pareto frontiers for 100 bricks × 10 SRs showing impact of workload flexibility on optimization potential.*
+*Figure 3e: Multi-scenario Pareto frontiers showing impact of workload flexibility on optimization potential*
 
 <div style="page-break-after: always;"></div>
 
@@ -233,6 +300,7 @@ Constraints:
 Seven bricks split between two SRs, primarily border territories equidistant from multiple offices (e.g., brick 24: 62% to SR3, 38% to SR7). The marginal distance gain (0.7%) suggests binary constraints are not a major limitation. However, linear programming relaxation solves 10× faster, useful for real-time what-if analysis.
 
 **Practical Assessment:** The 0.7% distance benefit rarely justifies increased coordination complexity. Partial assignment is recommended only when specific bricks naturally span multiple territories or when perfect workload balance is contractually required.
+<div style="page-break-after: always;"></div>
 
 ### 4.4 Extension: Demand Growth Scenario
 
@@ -304,8 +372,8 @@ Normalization by 20 ensures comparable scales (expected distance range: 10-20, e
 
 We generated 15 Pareto-optimal solutions spanning the trade-off spectrum.
 
-![Pareto Frontier - Office Relocation](STEP3_Graph/pareto_22x4_frontier.png)
-*Figure 4: Pareto frontier for office relocation showing distance-workload trade-off. Color indicates number of offices relocated.*
+![Pareto Frontier - Office Relocation](../STEP3_Graph/pareto_22x4_frontier.png)
+*Figure 4a: Pareto frontier for office relocation showing distance-workload trade-off. Color indicates number of offices relocated.*
 
 **Extreme Solutions:**
 
@@ -323,10 +391,39 @@ We generated 15 Pareto-optimal solutions spanning the trade-off spectrum.
 
 3. Workload Imbalance Risk: The minimum distance solution concentrates excessive workload (3.00, three times the average) on one SR. The balanced solution (α=0.36) maintains reasonable balance (max workload 1.38) while capturing most distance gains.
 
-<div style="page-break-after: always;"></div>
 
-![Trade-off Analysis](STEP3_Graph/pareto_22x4_tradeoff.png)
-*Figure 5: Dual-axis plot showing evolution of objectives as weight parameter α increases. Sweet spot occurs at α ∈ [0.3, 0.5].*
+
+#### Trade-off Evolution Analysis
+
+![Trade-off Analysis](../STEP3_Graph/pareto_22x4_tradeoff.png)
+*Figure 4b: Dual-axis plot showing evolution of objectives as weight parameter α increases*
+
+The dual-axis visualization reveals:
+- α < 0.3: Workload improves rapidly with minimal distance penalty
+- α ∈ [0.3, 0.7]: Balanced region (sweet spot for practical implementation)
+- α > 0.7: Distance improves at expense of severe workload imbalance
+
+#### Relocation Impact Distribution
+
+![Relocation Impact](../STEP3_Graph/pareto_22x4_relocation.png)
+*Figure 4c: Distribution of office relocations across Pareto solutions*
+
+Relocation analysis shows:
+- 3 offices relocated: 2 solutions (13%)
+- 4 offices relocated: 13 solutions (87%)
+
+Most efficient solutions require complete office reconfiguration. The two solutions preserving one office (α=0.0, α=0.07) achieve poor distance performance (≥29.68 km), confirming that current office locations are suboptimal.
+
+#### Weight Parameter Sensitivity
+
+![Alpha Effect](../STEP3_Graph/pareto_22x4_alpha.png)
+*Figure 4d: Normalized objectives showing sensitivity to weight parameter α*
+
+On a normalized 0-1 scale:
+- Workload (red line): Relatively flat for α > 0.3, sharp increase only at α=1.0
+- Distance (blue line): Smooth monotonic decrease throughout
+- Optimal range: α ∈ [0.3, 0.5] balances both objectives without extreme values
+<div style="page-break-after: always;"></div>
 
 ### 5.4 Practical Recommendations
 
