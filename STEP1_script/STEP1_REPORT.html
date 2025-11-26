@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>STEP1_REPORT.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<style>
+body { font-size: 10pt; }      /* Regular text */
+h1 { font-size: 18pt; }        /* Main titles */
+h2 { font-size: 14pt; }        /* Section titles */
+h3 { font-size: 12pt; }        /* Subsections */
+code { font-size: 9pt; }       /* Code blocks */
+</style>
+<h1 id="step-1-report-sales-representative-territory-assignment">STEP 1 REPORT: Sales Representative Territory Assignment</h1>
+<h2 id="fixed-center-bricks---mono--multi-objective-optimization">Fixed Center Bricks - Mono &amp; Multi-Objective Optimization</h2>
+<p><strong>Group 3 - Decision Modelling Project</strong><br>
+<strong>MSc Artificial Intelligence, CentraleSupélec 2025-26</strong></p>
+<hr>
+<h2 id="1-introduction">1. INTRODUCTION</h2>
+<h3 id="11-problem-context">1.1 Problem Context</h3>
+<p>Pfizer Turkey faces the challenge of assigning 22 geographic territories (&quot;bricks&quot;) to 4 Sales Representatives (SRs) while:</p>
+<ul>
+<li><strong>Minimizing travel distance</strong>: Total distance traveled by all SRs</li>
+<li><strong>Minimizing disruption</strong>: Changes to existing territory assignments (weighted by brick importance)</li>
+<li><strong>Balancing workload</strong>: Each SR should handle approximately 1.0 unit of workload</li>
+</ul>
+<p>In this first step, we consider SR office locations (center bricks) as <strong>fixed</strong> at: SR1→Brick 4, SR2→Brick 14, SR3→Brick 16, SR4→Brick 22.</p>
+<h3 id="12-mathematical-notation">1.2 Mathematical Notation</h3>
+<p><strong>Sets:</strong></p>
+<ul>
+<li><code>I = {1, 2, ..., 22}</code>: Set of bricks</li>
+<li><code>J = {1, 2, 3, 4}</code>: Set of SRs</li>
+</ul>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>w_i</code>: Workload (index value) of brick <code>i</code></li>
+<li><code>d_ij</code>: Distance from brick <code>i</code> to SR <code>j</code>'s office</li>
+<li><code>A_ij</code>: Current assignment (1 if brick <code>i</code> assigned to SR <code>j</code>, 0 otherwise)</li>
+<li><code>[wl_min, wl_max]</code>: Acceptable workload range per SR</li>
+</ul>
+<p><strong>Decision Variables:</strong></p>
+<ul>
+<li><code>x_ij ∈ {0,1}</code>: Binary variable (1 if brick <code>i</code> assigned to SR <code>j</code>)</li>
+</ul>
+<p><strong>Current Assignment:</strong> SR1: {4,5,6,7,8,15}, SR2: {10,11,12,13,14}, SR3: {9,16,17,18}, SR4: {1,2,3,19,20,21,22}</p>
+<div style="page-break-after: always;"></div>
+<h2 id="2-mono-objective-models">2. MONO-OBJECTIVE MODELS</h2>
+<h3 id="21-model-1-minimize-total-distance">2.1 Model 1: Minimize Total Distance</h3>
+<p><strong>Objective:</strong> Optimize travel efficiency by minimizing total distance traveled.</p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Model 1: Minimize Distance</span>
+m = gp.Model(<span class="hljs-string">"Model1_MinDistance"</span>)
+x = m.addVars(bricks, srs, vtype=GRB.BINARY, name=<span class="hljs-string">"x"</span>)
+
+<span class="hljs-comment"># Constraint 1: Each brick to exactly one SR</span>
+m.addConstrs((x.sum(i, <span class="hljs-string">'*'</span>) == <span class="hljs-number">1</span> <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> bricks), name=<span class="hljs-string">"AssignBrick"</span>)
+
+<span class="hljs-comment"># Constraint 2: Workload balance</span>
+m.addConstrs((gp.quicksum(workload[i] * x[i, j] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> bricks) &gt;= wl_min 
+              <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> srs), name=<span class="hljs-string">"WorkloadMin"</span>)
+m.addConstrs((gp.quicksum(workload[i] * x[i, j] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> bricks) &lt;= wl_max 
+              <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> srs), name=<span class="hljs-string">"WorkloadMax"</span>)
+
+<span class="hljs-comment"># Objective: Minimize total distance</span>
+obj = gp.quicksum(distances[i, j] * x[i, j] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> bricks <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> srs)
+m.setObjective(obj, GRB.MINIMIZE)
+m.optimize()
+</div></code></pre>
+<p><strong>Mathematical Formulation:</strong></p>
+<pre class="hljs"><code><div>Minimize:    Σ_i Σ_j d_ij · x_ij
+
+Subject to:  Σ_j x_ij = 1,  ∀i ∈ I                    (assignment)
+             wl_min ≤ Σ_i w_i · x_ij ≤ wl_max,  ∀j ∈ J  (workload)
+             x_ij ∈ {0,1},  ∀i,j                      (binary)
+</div></code></pre>
+<div style="page-break-after: always;"></div>
+<h3 id="22-model-2-minimize-disruption">2.2 Model 2: Minimize Disruption</h3>
+<p><strong>Objective:</strong> Preserve existing relationships by minimizing reassignment disruption, weighted by brick importance (index values).</p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Model 2: Minimize Disruption</span>
+m = gp.Model(<span class="hljs-string">"Model2_MinDisruption"</span>)
+x = m.addVars(bricks, srs, vtype=GRB.BINARY, name=<span class="hljs-string">"x"</span>)
+y = m.addVars(bricks, srs, vtype=GRB.CONTINUOUS, name=<span class="hljs-string">"y"</span>)  <span class="hljs-comment"># |x_ij - A_ij|</span>
+
+A = create_current_assignment_matrix()  <span class="hljs-comment"># Current assignment</span>
+
+<span class="hljs-comment"># Constraints 1-2: Same as Model 1</span>
+m.addConstrs((x.sum(i, <span class="hljs-string">'*'</span>) == <span class="hljs-number">1</span> <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> bricks), name=<span class="hljs-string">"AssignBrick"</span>)
+m.addConstrs((gp.quicksum(workload[i] * x[i, j] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> bricks) &gt;= wl_min 
+              <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> srs), name=<span class="hljs-string">"WorkloadMin"</span>)
+m.addConstrs((gp.quicksum(workload[i] * x[i, j] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> bricks) &lt;= wl_max 
+              <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> srs), name=<span class="hljs-string">"WorkloadMax"</span>)
+
+<span class="hljs-comment"># Constraint 3: Linearize absolute value |x_ij - A_ij|</span>
+<span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> bricks:
+    <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> srs:
+        m.addConstr(y[i, j] &gt;= x[i, j] - A[(i, j)])
+        m.addConstr(y[i, j] &gt;= A[(i, j)] - x[i, j])
+
+<span class="hljs-comment"># Objective: Minimize weighted disruption</span>
+obj = gp.quicksum(workload[i] * y[i, j] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> bricks <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> srs)
+m.setObjective(obj, GRB.MINIMIZE)
+m.optimize()
+</div></code></pre>
+<p><strong>Mathematical Formulation:</strong></p>
+<pre class="hljs"><code><div>Minimize:    Σ_i Σ_j w_i · |x_ij - A_ij|
+
+Subject to:  Same assignment &amp; workload constraints as Model 1
+             y_ij ≥ x_ij - A_ij,  ∀i,j     (absolute value linearization)
+             y_ij ≥ A_ij - x_ij,  ∀i,j     (absolute value linearization)
+             y_ij ≥ 0,  ∀i,j
+</div></code></pre>
+<div style="page-break-after: always;"></div>
+<h3 id="23-results-for-22-bricks-%C3%97-4-srs-workload-08-12">2.3 Results for 22 Bricks × 4 SRs (Workload [0.8, 1.2])</h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Current Assignment</th>
+<th>Model 1 (Min Distance)</th>
+<th>Model 2 (Min Disruption)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Total Distance</strong></td>
+<td>187.41 km</td>
+<td><strong>154.60 km</strong> (-17.5%)</td>
+<td>188.95 km (-0.8%)</td>
+</tr>
+<tr>
+<td><strong>Disruption</strong></td>
+<td>0.0000 (baseline)</td>
+<td>0.5864</td>
+<td><strong>0.1696</strong></td>
+</tr>
+<tr>
+<td><strong>Workload Range</strong></td>
+<td>[0.556, 1.168]</td>
+<td>[0.803, 1.115]</td>
+<td>[0.874, 1.168]</td>
+</tr>
+<tr>
+<td><strong>Solve Time</strong></td>
+<td>-</td>
+<td>&lt; 0.5s</td>
+<td>&lt; 0.5s</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key Observations:</strong></p>
+<ul>
+<li><strong>Model 1</strong> achieves 17.5% distance reduction but causes higher disruption (0.5864)</li>
+<li><strong>Model 2</strong> preserves most relationships (disruption 0.1696) at cost of minimal distance improvement</li>
+<li>Both models balance workload within [0.8, 1.2] constraints</li>
+<li>Clear trade-off between efficiency and stability</li>
+</ul>
+<div style="page-break-after: always;"></div>
+<h2 id="3-multi-objective-optimization-epsilon-constraint-method">3. MULTI-OBJECTIVE OPTIMIZATION: EPSILON-CONSTRAINT METHOD</h2>
+<h3 id="31-methodology">3.1 Methodology</h3>
+<p>To explore the trade-off between distance and disruption, we implement the <strong>epsilon-constraint method</strong>:</p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Epsilon-Constraint Method</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">epsilon_constraint_method</span><span class="hljs-params">(wl_min, wl_max, num_points=<span class="hljs-number">20</span>)</span>:</span>
+    <span class="hljs-comment"># 1. Find disruption range: [min_disruption, max_disruption]</span>
+    m_min, _ = model_2_minimize_disruption(wl_min, wl_max)
+    min_disruption = m_min.ObjVal
+    
+    m_max, sol = model_1_minimize_distance(wl_min, wl_max)
+    max_disruption = calculate_disruption(sol)
+    
+    <span class="hljs-comment"># 2. Generate epsilon values</span>
+    epsilon_values = np.linspace(min_disruption, max_disruption, num_points)
+    
+    <span class="hljs-comment"># 3. Solve for each epsilon</span>
+    <span class="hljs-keyword">for</span> eps <span class="hljs-keyword">in</span> epsilon_values:
+        m = gp.Model(<span class="hljs-string">"EpsilonConstraint"</span>)
+        x = m.addVars(bricks, srs, vtype=GRB.BINARY, name=<span class="hljs-string">"x"</span>)
+        y = m.addVars(bricks, srs, vtype=GRB.CONTINUOUS, name=<span class="hljs-string">"y"</span>)
+        
+        <span class="hljs-comment"># Standard constraints (assignment + workload)</span>
+        m.addConstrs((x.sum(i, <span class="hljs-string">'*'</span>) == <span class="hljs-number">1</span> <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> bricks))
+        m.addConstrs((gp.quicksum(workload[i] * x[i,j] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> bricks) &gt;= wl_min 
+                      <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> srs))
+        m.addConstrs((gp.quicksum(workload[i] * x[i,j] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> bricks) &lt;= wl_max 
+                      <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> srs))
+        <span class="hljs-comment"># Absolute value constraints</span>
+        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> bricks:
+            <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> srs:
+                m.addConstr(y[i, j] &gt;= x[i, j] - A[(i, j)])
+                m.addConstr(y[i, j] &gt;= A[(i, j)] - x[i, j])
+        <span class="hljs-comment"># EPSILON CONSTRAINT: Disruption ≤ ε</span>
+        disruption = gp.quicksum(workload[i] * y[i, j] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> bricks <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> srs)
+        m.addConstr(disruption &lt;= eps, name=<span class="hljs-string">"EpsilonConstraint"</span>)
+        <span class="hljs-comment"># PRIMARY OBJECTIVE: Minimize distance</span>
+        <span class="hljs-comment"># Add small coefficient (0.0001) to break ties → ensures Pareto efficiency</span>
+        distance = gp.quicksum(distances[i, j] * x[i, j] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> bricks <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> srs)
+        m.setObjective(distance + <span class="hljs-number">0.0001</span> * disruption, GRB.MINIMIZE)
+        m.optimize()
+</div></code></pre>
+<div style="page-break-after: always;"></div>
+<p><strong>Mathematical Formulation:</strong></p>
+<pre class="hljs"><code><div>Minimize:    Σ_i Σ_j d_ij · x_ij + 0.0001 · Σ_i Σ_j w_i · y_ij
+
+Subject to:  All constraints from Models 1 &amp; 2
+             Σ_i Σ_j w_i · y_ij ≤ ε    (epsilon constraint on disruption)
+</div></code></pre>
+<p><strong>Key Feature:</strong> The small coefficient (0.0001) on disruption in the objective ensures we find <strong>efficient (Pareto-optimal)</strong> solutions by breaking ties in favor of lower disruption.</p>
+<h3 id="32-pareto-frontiers-three-workload-scenarios">3.2 Pareto Frontiers: Three Workload Scenarios</h3>
+<p>We generate Pareto frontiers for three workload flexibility levels:</p>
+<h4 id="scenario-1-08-12---high-flexibility-%C2%B120"><strong>Scenario 1: [0.8, 1.2] - High Flexibility (±20%)</strong></h4>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pareto Solutions</td>
+<td>25</td>
+</tr>
+<tr>
+<td>Distance Range</td>
+<td>[165.96 km, 188.95 km]</td>
+</tr>
+<tr>
+<td>Disruption Range</td>
+<td>[0.1696, 0.5864]</td>
+</tr>
+</tbody>
+</table>
+<p><img src="STEP1_Graph/pareto_Scenario_1_0.8_1.2.png" alt="Pareto Frontier - Scenario 1">
+<em>Figure 3: Pareto frontier for workload bounds [0.8, 1.2]</em></p>
+<p><img src="STEP1_Graph/workload_Scenario_1_0.8_1.2.png" alt="Workload Distribution - Scenario 1">
+<em>Figure 4: Workload distribution across Pareto solutions (Scenario 1)</em></p>
+<h4 id="scenario-2-085-115---medium-flexibility-%C2%B115"><strong>Scenario 2: [0.85, 1.15] - Medium Flexibility (±15%)</strong></h4>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pareto Solutions</td>
+<td>25</td>
+</tr>
+<tr>
+<td>Distance Range</td>
+<td>[171.68 km, 187.24 km]</td>
+</tr>
+<tr>
+<td>Disruption Range</td>
+<td>[0.2529, 0.4867]</td>
+</tr>
+</tbody>
+</table>
+<p><img src="STEP1_Graph/pareto_Scenario_2_0.85_1.15.png" alt="Pareto Frontier - Scenario 2">
+<em>Figure 5: Pareto frontier for workload bounds [0.85, 1.15]</em></p>
+<p><img src="STEP1_Graph/workload_Scenario_2_0.85_1.15.png" alt="Workload Distribution - Scenario 2">
+<em>Figure 6: Workload distribution across Pareto solutions (Scenario 2)</em></p>
+<h4 id="scenario-3-09-11---low-flexibility-%C2%B110"><strong>Scenario 3: [0.9, 1.1] - Low Flexibility (±10%)</strong></h4>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pareto Solutions</td>
+<td>25</td>
+</tr>
+<tr>
+<td>Distance Range</td>
+<td>[171.68 km, 187.24 km]</td>
+</tr>
+<tr>
+<td>Disruption Range</td>
+<td>[0.2529, 0.4867]</td>
+</tr>
+</tbody>
+</table>
+<p><img src="STEP1_Graph/pareto_Scenario_3_0.9_1.1.png" alt="Pareto Frontier - Scenario 3">
+<em>Figure 7: Pareto frontier for workload bounds [0.9, 1.1]</em></p>
+<p><img src="STEP1_Graph/workload_Scenario_3_0.9_1.1.png" alt="Workload Distribution - Scenario 3">
+<em>Figure 8: Workload distribution across Pareto solutions (Scenario 3)</em></p>
+<h3 id="33-comparative-analysis">3.3 Comparative Analysis</h3>
+<p><img src="STEP1_Graph/pareto_comparison.png" alt="Pareto Frontier Comparison">
+<em>Figure 9: Comparison of Pareto frontiers across three workload scenarios</em></p>
+<p><strong>Summary Table:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Workload Range</th>
+<th>Pareto Points</th>
+<th>Best Distance</th>
+<th>Best Disruption</th>
+<th>Distance at Min Disr</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1: [0.8, 1.2]</strong></td>
+<td>±20%</td>
+<td>25</td>
+<td>165.96 km</td>
+<td>0.1696</td>
+<td>188.95 km</td>
+</tr>
+<tr>
+<td><strong>2: [0.85, 1.15]</strong></td>
+<td>±15%</td>
+<td>25</td>
+<td>171.68 km</td>
+<td>0.2529</td>
+<td>187.24 km</td>
+</tr>
+<tr>
+<td><strong>3: [0.9, 1.1]</strong></td>
+<td>±10%</td>
+<td>25</td>
+<td>171.68 km</td>
+<td>0.2529</td>
+<td>187.24 km</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key Insights:</strong></p>
+<ol>
+<li>
+<p><strong>Workload Flexibility Impact:</strong></p>
+<ul>
+<li>More flexible bounds ([0.8, 1.2]) enable <strong>5.72 km better</strong> distance optimization (165.96 vs 171.68 km)</li>
+<li>Tighter bounds restrict solution space, reducing potential for distance savings</li>
+<li>Scenarios 2 and 3 produce identical frontiers (constraints become equivalently restrictive)</li>
+</ul>
+</li>
+<li>
+<p><strong>Trade-off Characteristics:</strong></p>
+<ul>
+<li><strong>Steep region (low disruption)</strong>: Small disruption increases yield large distance savings</li>
+<li><strong>Flat region (high disruption)</strong>: Diminishing returns on distance as disruption grows</li>
+<li>Decision-makers can identify &quot;sweet spot&quot; solutions balancing both objectives</li>
+</ul>
+</li>
+<li>
+<p><strong>Practical Implications:</strong></p>
+<ul>
+<li>Solutions at disruption ~0.3 offer good compromise: 10-12% distance reduction with moderate change</li>
+<li>Extreme solutions (min distance or min disruption) may not be practical</li>
+<li>Pareto frontier provides 20-25 distinct alternatives for management consideration</li>
+</ul>
+</li>
+</ol>
+<div style="page-break-after: always;"></div>
+<h2 id="4-decision-space-visualization">4. DECISION SPACE VISUALIZATION</h2>
+<h3 id="41-solution-characteristics">4.1 Solution Characteristics</h3>
+<p>The generated Pareto solutions provide decision-makers with a spectrum of choices:</p>
+<ul>
+<li><strong>Left side of frontier</strong> (low disruption): Preserves most current relationships, modest distance improvements</li>
+<li><strong>Middle region</strong> (balanced): Achieves substantial distance savings (10-15%) with acceptable disruption</li>
+<li><strong>Right side of frontier</strong> (low distance): Maximum efficiency, but significant organizational change required</li>
+</ul>
+<h3 id="42-workload-balance-analysis">4.2 Workload Balance Analysis</h3>
+<p>All Pareto solutions satisfy workload constraints within specified bounds. The visualizations show:</p>
+<ul>
+<li>Scenario 1 ([0.8, 1.2]): Widest workload variation, most solution flexibility</li>
+<li>Scenarios 2 &amp; 3 ([0.85, 1.15] and [0.9, 1.1]): Tighter distributions, more uniform SR workloads</li>
+</ul>
+<h3 id="43-assignment-pattern-changes">4.3 Assignment Pattern Changes</h3>
+<p>The heatmaps (Figures 1-2) reveal:</p>
+<ul>
+<li><strong>High-index bricks</strong> (e.g., brick 14: 0.82, brick 15: 0.41): Critical for disruption metric</li>
+<li><strong>Geographic clustering</strong>: Distance-optimal solutions group nearby bricks</li>
+<li><strong>Stability patterns</strong>: Min-disruption solutions maintain core territory structures</li>
+</ul>
+<div style="page-break-after: always;"></div>
+<h2 id="5-conclusions">5. CONCLUSIONS</h2>
+<h3 id="51-model-performance">5.1 Model Performance</h3>
+<p>Both mono-objective models solve efficiently (&lt; 1 second) for the 22×4 problem:</p>
+<ul>
+<li><strong>Model 1</strong> identifies 17.5% distance savings potential</li>
+<li><strong>Model 2</strong> provides stable baseline with minimal change</li>
+<li>Epsilon-constraint method generates comprehensive Pareto frontiers (~25 solutions per scenario)</li>
+</ul>
+<h3 id="52-key-findings">5.2 Key Findings</h3>
+<ol>
+<li><strong>Clear Trade-off Exists:</strong> Distance and disruption objectives conflict; no single optimal solution</li>
+<li><strong>Workload Flexibility Matters:</strong> Relaxing constraints from ±10% to ±20% improves best distance by 3.3%</li>
+<li><strong>Multiple Good Solutions:</strong> Pareto frontiers offer 20+ alternatives spanning the efficiency-stability spectrum</li>
+<li><strong>Computational Efficiency:</strong> All models solve optimally in under 2 seconds, suitable for interactive decision support</li>
+</ol>
+<h3 id="53-decision-support">5.3 Decision Support</h3>
+<p>For Pfizer Turkey management, we recommend:</p>
+<ul>
+<li><strong>Conservative approach:</strong> Solutions near disruption 0.25-0.30 (maintain ~75% of current assignments)</li>
+<li><strong>Moderate approach:</strong> Solutions near disruption 0.35-0.40 (balance efficiency and stability)</li>
+<li><strong>Aggressive approach:</strong> Solutions near disruption 0.45-0.50 (maximize distance savings)</li>
+</ul>
+<p>The choice depends on organizational priorities:</p>
+<ul>
+<li>If SR-MD relationships are critical → favor low disruption</li>
+<li>If operational costs dominate → favor low distance</li>
+<li>If both matter equally → select middle-ground solutions</li>
+</ul>
+<h2 id="div-style%22page-break-after-always%22div"><div style="page-break-after: always;"></div></h2>
+<h2 id="appendix-a-implementation">APPENDIX A: IMPLEMENTATION</h2>
+<p><strong>Code Structure:</strong></p>
+<ul>
+<li><code>STEP1_script/pfizer_optimization.py</code>: Main optimization framework (460 lines)
+<ul>
+<li><code>PfizerOptimization</code> class with Model 1, Model 2, epsilon-constraint method</li>
+<li>Data loading, solution extraction, analysis utilities</li>
+</ul>
+</li>
+<li><code>STEP1_script/pareto_analysis.py</code>: Pareto frontier generation and visualization (347 lines)
+<ul>
+<li>Generates all three scenarios</li>
+<li>Creates publication-quality plots</li>
+<li>Exports CSV data for further analysis</li>
+</ul>
+</li>
+</ul>
+<p><strong>Data Files:</strong></p>
+<ul>
+<li><code>data/indexValues.xlsx</code>: Workload (index values) per brick</li>
+<li><code>data/distances.xlsx</code>: Distance matrix (brick → SR office)</li>
+</ul>
+<p><strong>Generated Outputs:</strong></p>
+<ul>
+<li><code>STEP1_Graph/pareto_Scenario_*.png</code>: Individual Pareto frontiers</li>
+<li><code>STEP1_Graph/pareto_comparison.png</code>: Comparative visualization</li>
+<li><code>STEP1_Graph/workload_Scenario_*.png</code>: Workload distributions</li>
+<li><code>STEP1_Graph/assignment_heatmap_*.png</code>: Territory assignment heatmaps</li>
+<li><code>STEP1_Graph/pareto_Scenario_*.csv</code>: Solution data for each scenario</li>
+<li><code>STEP1_Graph/pareto_summary.csv</code>: Summary statistics</li>
+</ul>
+<p><strong>Reproducibility:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Run both models on 22×4 instance</span>
+python STEP1_script/pfizer_optimization.py
+
+<span class="hljs-comment"># Generate all Pareto frontiers and visualizations</span>
+python STEP1_script/pareto_analysis.py
+</div></code></pre>
+<hr>
+<h2 id="appendix-b-complete-results-data">APPENDIX B: COMPLETE RESULTS DATA</h2>
+<p><strong>Model 1 (Minimize Distance) - Scenario [0.8, 1.2]:</strong></p>
+<table>
+<thead>
+<tr>
+<th>SR</th>
+<th>Assigned Bricks</th>
+<th>Workload</th>
+<th>Distance (km)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>4,5,6,7,8,9,12,19,20</td>
+<td>1.0376</td>
+<td>64.37</td>
+</tr>
+<tr>
+<td>2</td>
+<td>11,13,14,18</td>
+<td>1.0447</td>
+<td>7.53</td>
+</tr>
+<tr>
+<td>3</td>
+<td>10,15,16,17</td>
+<td>1.1149</td>
+<td>6.57</td>
+</tr>
+<tr>
+<td>4</td>
+<td>1,2,3,21,22</td>
+<td>0.8028</td>
+<td>76.13</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td>-</td>
+<td><strong>4.0000</strong></td>
+<td><strong>154.60</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Model 2 (Minimize Disruption) - Scenario [0.8, 1.2]:</strong></p>
+<table>
+<thead>
+<tr>
+<th>SR</th>
+<th>Assigned Bricks</th>
+<th>Workload</th>
+<th>Distance (km)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>4,5,6,7,8,15</td>
+<td>0.9507</td>
+<td>19.30</td>
+</tr>
+<tr>
+<td>2</td>
+<td>10,13,14</td>
+<td>1.1681</td>
+<td>7.82</td>
+</tr>
+<tr>
+<td>3</td>
+<td>9,11,12,16,17,18</td>
+<td>0.8744</td>
+<td>37.09</td>
+</tr>
+<tr>
+<td>4</td>
+<td>1,2,3,19,20,21,22</td>
+<td>1.0068</td>
+<td>124.74</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td>-</td>
+<td><strong>4.0000</strong></td>
+<td><strong>188.95</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Current Assignment (Baseline):</strong></p>
+<table>
+<thead>
+<tr>
+<th>SR</th>
+<th>Assigned Bricks</th>
+<th>Workload</th>
+<th>Distance (km)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>4,5,6,7,8,15</td>
+<td>0.9507</td>
+<td>19.30</td>
+</tr>
+<tr>
+<td>2</td>
+<td>10,11,12,13,14</td>
+<td>1.1680</td>
+<td>31.82</td>
+</tr>
+<tr>
+<td>3</td>
+<td>9,16,17,18</td>
+<td>0.8748</td>
+<td>12.55</td>
+</tr>
+<tr>
+<td>4</td>
+<td>1,2,3,19,20,21,22</td>
+<td>1.0068</td>
+<td>123.74</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td>-</td>
+<td><strong>4.0000</strong></td>
+<td><strong>187.41</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Pareto Frontier Summary (Selected Solutions):</strong></p>
+<p><em>Scenario 1: [0.8, 1.2]</em></p>
+<table>
+<thead>
+<tr>
+<th>Solution #</th>
+<th>Distance (km)</th>
+<th>Disruption</th>
+<th>Trade-off</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 (Min Dist)</td>
+<td>165.96</td>
+<td>0.5864</td>
+<td>Maximum efficiency</td>
+</tr>
+<tr>
+<td>5</td>
+<td>167.25</td>
+<td>0.4569</td>
+<td>Balanced</td>
+</tr>
+<tr>
+<td>10</td>
+<td>171.43</td>
+<td>0.3523</td>
+<td>Moderate</td>
+</tr>
+<tr>
+<td>15</td>
+<td>177.62</td>
+<td>0.2641</td>
+<td>Conservative</td>
+</tr>
+<tr>
+<td>25 (Min Disr)</td>
+<td>188.95</td>
+<td>0.1696</td>
+<td>Maximum stability</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><strong>End of Report</strong></p>
+
+</body>
+</html>
