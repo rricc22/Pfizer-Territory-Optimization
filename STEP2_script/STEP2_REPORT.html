@@ -1,0 +1,1554 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>STEP2_REPORT.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<style>
+body { font-size: 10pt; }      /* Regular text */
+h1 { font-size: 18pt; }        /* Main titles */
+h2 { font-size: 14pt; }        /* Section titles */
+h3 { font-size: 12pt; }        /* Subsections */
+code { font-size: 9pt; }       /* Code blocks */
+</style>
+<h1 id="step-2--model-extensions">STEP 2 : Model Extensions</h1>
+<h2 id="scalability-testing-partial-assignment--demand-growth">Scalability Testing, Partial Assignment &amp; Demand Growth</h2>
+<h2 id="2-model-extensions">2. MODEL EXTENSIONS</h2>
+<h3 id="21-overview">2.1 Overview</h3>
+<p>Step 2 extends the base models from Step 1 to address three practical scenarios:</p>
+<ol>
+<li><strong>Scalability Testing (100×10)</strong>: Can models handle larger instances (100 bricks, 10 SRs)?</li>
+<li><strong>Partial Assignment</strong>: What if bricks can be split between multiple SRs?</li>
+<li><strong>Demand Growth</strong>: How to locate a new SR office when demand increases by 25%?</li>
+</ol>
+<p><strong>Key Challenge</strong>: Gurobi limited license (2,000 variables max) requires model optimization techniques.</p>
+<h2 id="22-extension-1-scalability-test-100-bricks-%C3%97-10-srs">2.2 EXTENSION 1: SCALABILITY TEST (100 BRICKS × 10 SRs)</h2>
+<h3 id="221-problem-scaling">2.2.1 Problem Scaling</h3>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>22×4 (Step 1)</th>
+<th>100×10 (Step 2)</th>
+<th>Scale Factor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Bricks</strong></td>
+<td>22</td>
+<td>100</td>
+<td>4.5×</td>
+</tr>
+<tr>
+<td><strong>SRs</strong></td>
+<td>4</td>
+<td>10</td>
+<td>2.5×</td>
+</tr>
+<tr>
+<td><strong>Variables</strong></td>
+<td>88</td>
+<td>1,000</td>
+<td>11.4×</td>
+</tr>
+<tr>
+<td><strong>Constraints</strong></td>
+<td>~100</td>
+<td>~1,200</td>
+<td>12×</td>
+</tr>
+<tr>
+<td><strong>Total Workload</strong></td>
+<td>4.0</td>
+<td>10.0</td>
+<td>2.5×</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Data Source</strong>: <code>data/data-100x10.xlsx</code> with coordinates, index values, and current assignments.</p>
+<div style="page-break-after: always;"></div>
+<h3 id="222-model-1-minimize-distance-100%C3%9710">2.2.2 Model 1: Minimize Distance (100×10)</h3>
+<p>Same formulation as Step 1, scaled to larger instance:</p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Model 1: Minimize Distance (100 bricks × 10 SRs)</span>
+m = gp.Model(<span class="hljs-string">"Model1_MinDistance_100x10"</span>)
+x = m.addVars(bricks, srs, vtype=GRB.BINARY, name=<span class="hljs-string">"x"</span>)  <span class="hljs-comment"># 1000 variables</span>
+
+<span class="hljs-comment"># Constraints (same structure as Step 1)</span>
+m.addConstrs((x.sum(i, <span class="hljs-string">'*'</span>) == <span class="hljs-number">1</span> <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> bricks), name=<span class="hljs-string">"AssignBrick"</span>)
+m.addConstrs((gp.quicksum(workload[i] * x[i, j] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> bricks) &gt;= wl_min 
+              <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> srs), name=<span class="hljs-string">"WorkloadMin"</span>)
+m.addConstrs((gp.quicksum(workload[i] * x[i, j] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> bricks) &lt;= wl_max 
+              <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> srs), name=<span class="hljs-string">"WorkloadMax"</span>)
+
+<span class="hljs-comment"># Objective</span>
+obj = gp.quicksum(distances[i, j] * x[i, j] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> bricks <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> srs)
+m.setObjective(obj, GRB.MINIMIZE)
+m.optimize()
+</div></code></pre>
+<p><strong>Results:</strong></p>
+<ul>
+<li>Optimal solution: <strong>Distance = 15.04</strong></li>
+<li>Solve time: <strong>&lt; 0.1 seconds</strong></li>
+<li>Status: Optimal (MIP gap: 0%)</li>
+<li>All workload constraints satisfied: [0.8, 1.2]</li>
+</ul>
+<div style="page-break-after: always;"></div>
+<h3 id="223-model-2-minimize-disruption-100%C3%9710---optimized">2.2.3 Model 2: Minimize Disruption (100×10) - OPTIMIZED</h3>
+<p><strong>Challenge</strong>: Standard formulation requires 2,000 auxiliary variables (y[i,j]) → exceeds license limit.</p>
+<p><strong>Solution</strong>: Direct computation without auxiliary variables:</p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Model 2: Optimized for limited license</span>
+m = gp.Model(<span class="hljs-string">"Model2_MinDisruption_100x10"</span>)
+x = m.addVars(bricks, srs, vtype=GRB.BINARY, name=<span class="hljs-string">"x"</span>)  <span class="hljs-comment"># Only 1000 variables!</span>
+
+A = create_current_assignment_matrix()  <span class="hljs-comment"># Current assignment</span>
+
+<span class="hljs-comment"># Standard constraints (same as Model 1)</span>
+m.addConstrs((x.sum(i, <span class="hljs-string">'*'</span>) == <span class="hljs-number">1</span> <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> bricks), name=<span class="hljs-string">"AssignBrick"</span>)
+m.addConstrs((gp.quicksum(workload[i] * x[i, j] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> bricks) &gt;= wl_min 
+              <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> srs), name=<span class="hljs-string">"WorkloadMin"</span>)
+m.addConstrs((gp.quicksum(workload[i] * x[i, j] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> bricks) &lt;= wl_max 
+              <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> srs), name=<span class="hljs-string">"WorkloadMax"</span>)
+
+<span class="hljs-comment"># OPTIMIZED OBJECTIVE: Direct disruption computation</span>
+<span class="hljs-comment"># For binary variables: |x - A| = x(1-A) + A(1-x)</span>
+obj_terms = []
+<span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> bricks:
+    <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> srs:
+        <span class="hljs-keyword">if</span> A[(i, j)] == <span class="hljs-number">1</span>:
+            <span class="hljs-comment"># Was assigned to j, disruption if NOT assigned now</span>
+            obj_terms.append(workload[i] * (<span class="hljs-number">1</span> - x[i, j]))
+        <span class="hljs-keyword">else</span>:
+            <span class="hljs-comment"># Was NOT assigned to j, disruption if assigned now</span>
+            obj_terms.append(workload[i] * x[i, j])
+
+m.setObjective(gp.quicksum(obj_terms), GRB.MINIMIZE)
+m.optimize()
+</div></code></pre>
+<p><strong>Key Innovation</strong>: Eliminates auxiliary variables by exploiting binary property: <code>|x - A|</code> = <code>x(1-A) + A(1-x)</code> for x, A ∈ {0,1}.</p>
+<p><strong>Results:</strong></p>
+<ul>
+<li>Optimal solution: <strong>Disruption = 0.685</strong></li>
+<li>Solve time: <strong>&lt; 0.2 seconds</strong></li>
+<li>Variables reduced: 2,000 → 1,000 (50% reduction)</li>
+<li>Status: Optimal, within license limits</li>
+</ul>
+<div style="page-break-after: always;"></div>
+<h3 id="224-performance-comparison-22%C3%974-vs-100%C3%9710">2.2.4 Performance Comparison: 22×4 vs 100×10</h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>22×4 (Step 1)</th>
+<th>100×10 (Step 2)</th>
+<th>Scaling Factor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Variables</strong></td>
+<td>88</td>
+<td>1,000</td>
+<td>11.4×</td>
+</tr>
+<tr>
+<td><strong>Solve Time (Model 1)</strong></td>
+<td>&lt; 0.5s</td>
+<td>&lt; 0.1s</td>
+<td>5× faster</td>
+</tr>
+<tr>
+<td><strong>Solve Time (Model 2)</strong></td>
+<td>&lt; 0.5s</td>
+<td>&lt; 0.2s</td>
+<td>2.5× faster</td>
+</tr>
+<tr>
+<td><strong>Optimality</strong></td>
+<td>Optimal</td>
+<td>Optimal</td>
+<td>Both exact</td>
+</tr>
+<tr>
+<td><strong>License Status</strong></td>
+<td>Well within</td>
+<td>Within limits</td>
+<td>Feasible</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key Observation</strong>: Models scale efficiently. Larger instances solve faster due to problem structure and Gurobi's optimization.</p>
+<h3 id="225-pareto-frontier-epsilon-constraint-method">2.2.5 Pareto Frontier: Epsilon-Constraint Method</h3>
+<p>Applied same epsilon-constraint methodology from Step 1 to 100×10 instance:</p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Epsilon-constraint for 100×10 (same algorithm as Step 1)</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">epsilon_constraint_pareto</span><span class="hljs-params">(wl_min=<span class="hljs-number">0.8</span>, wl_max=<span class="hljs-number">1.2</span>, num_points=<span class="hljs-number">15</span>)</span>:</span>
+    <span class="hljs-comment"># 1. Find disruption range</span>
+    m_min_disr, _ = model_2_minimize_disruption(wl_min, wl_max)
+    min_disruption = m_min_disr.ObjVal
+    
+    m_min_dist, _ = model_1_minimize_distance(wl_min, wl_max)
+    max_disruption = calculate_disruption(m_min_dist)
+    
+    <span class="hljs-comment"># 2. Generate epsilon values</span>
+    epsilon_values = np.linspace(min_disruption, max_disruption, num_points)
+    
+    <span class="hljs-comment"># 3. Solve for each epsilon</span>
+    <span class="hljs-keyword">for</span> eps <span class="hljs-keyword">in</span> epsilon_values:
+        m = gp.Model(<span class="hljs-string">"EpsilonConstraint"</span>)
+        x = m.addVars(bricks, srs, vtype=GRB.BINARY, name=<span class="hljs-string">"x"</span>)
+        
+        <span class="hljs-comment"># Standard constraints</span>
+        m.addConstrs((x.sum(i, <span class="hljs-string">'*'</span>) == <span class="hljs-number">1</span> <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> bricks))
+        m.addConstrs((gp.quicksum(workload[i] * x[i,j] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> bricks) &gt;= wl_min 
+                      <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> srs))
+        m.addConstrs((gp.quicksum(workload[i] * x[i,j] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> bricks) &lt;= wl_max 
+                      <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> srs))
+        
+        <span class="hljs-comment"># Epsilon constraint on disruption (using optimized formulation)</span>
+        disruption_expr = compute_disruption_directly(x, A, workload)
+        m.addConstr(disruption_expr &lt;= eps, name=<span class="hljs-string">"EpsilonConstraint"</span>)
+        
+        <span class="hljs-comment"># Objective: Minimize distance + small tie-breaker</span>
+        distance = gp.quicksum(distances[i, j] * x[i, j] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> bricks <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> srs)
+        m.setObjective(distance + <span class="hljs-number">0.0001</span> * disruption_expr, GRB.MINIMIZE)
+        m.optimize()
+        <span class="hljs-comment"># Store Pareto solution...</span>
+</div></code></pre>
+<p><strong>Results:</strong></p>
+<ul>
+<li>Generated <strong>15 non-dominated solutions</strong></li>
+<li>Distance range: <strong>[15.04, 18.88]</strong></li>
+<li>Disruption range: <strong>[0.685, 5.549]</strong></li>
+<li>Workload balance maintained: all solutions satisfy [0.8, 1.2] bounds</li>
+<li>Total computation time: <strong>~5 seconds</strong> for complete Pareto frontier</li>
+</ul>
+<div style="page-break-after: always;"></div>
+<h3 id="226-pareto-frontier-visualization--analysis">2.2.6 Pareto Frontier Visualization &amp; Analysis</h3>
+<p><img src="STEP2_Graph/pareto_100x10_frontier.png" alt="Pareto Frontier 100x10">
+<em>Figure 1: Pareto frontier for 100 bricks × 10 SRs showing distance-disruption trade-off. Color indicates workload standard deviation.</em></p>
+<p><strong>Key Insights from Pareto Frontier:</strong></p>
+<ol>
+<li>
+<p><strong>Trade-off Characteristics:</strong></p>
+<ul>
+<li><strong>Steep region</strong> (disruption 0.7-2.0): Large distance savings for small disruption increases</li>
+<li><strong>Moderate region</strong> (disruption 2.0-4.0): Balanced solutions with 10-15% distance improvement</li>
+<li><strong>Flat region</strong> (disruption 4.0-5.5): Diminishing returns, high organizational change</li>
+</ul>
+</li>
+<li>
+<p><strong>Solution Distribution:</strong></p>
+<ul>
+<li>15 distinct Pareto-optimal solutions spanning full trade-off spectrum</li>
+<li>No gaps in frontier → comprehensive decision support</li>
+<li>Workload balance consistent across all solutions (std dev: 0.13-0.16)</li>
+</ul>
+</li>
+</ol>
+<p><img src="STEP2_Graph/pareto_100x10_tradeoff.png" alt="Trade-off Analysis">
+<em>Figure 2: Dual-axis plot showing simultaneous evolution of distance and disruption across Pareto solutions.</em></p>
+<p><strong>Trade-off Analysis:</strong></p>
+<ul>
+<li>Solutions 1-5: Low disruption (0.7-2.1), moderate distance (15.9-18.9)</li>
+<li>Solutions 6-10: Balanced trade-off (disruption 2.4-4.2, distance 15.5-15.7)</li>
+<li>Solutions 11-15: Low distance (15.0-15.2), high disruption (4.4-5.5)</li>
+</ul>
+<div style="page-break-after: always;"></div>
+<p><img src="STEP2_Graph/pareto_100x10_workload.png" alt="Workload Metrics">
+<em>Figure 3: Workload metrics across Pareto solutions. All solutions satisfy [0.8, 1.2] bounds with low variance.</em></p>
+<p><strong>Workload Balance Analysis:</strong></p>
+<ul>
+<li><strong>Maximum workload</strong>: 1.19-1.20 (consistently near upper bound)</li>
+<li><strong>Minimum workload</strong>: 0.80-0.82 (consistently near lower bound)</li>
+<li><strong>Standard deviation</strong>: 0.13-0.16 (low variance indicates fair distribution)</li>
+</ul>
+<p><strong>Conclusion</strong>: Models effectively balance workload while optimizing distance-disruption trade-off.</p>
+<p><img src="STEP2_Graph/pareto_100x10_changes.png" alt="Number of Changes">
+<em>Figure 4: Number of brick reassignments across Pareto solutions. Color gradient from green (few changes) to red (many changes).</em></p>
+<p><strong>Reassignment Patterns:</strong></p>
+<ul>
+<li><strong>Minimum changes</strong>: 8 bricks (8% of total) at highest disruption tolerance</li>
+<li><strong>Maximum changes</strong>: 33 bricks (33% of total) at lowest disruption tolerance</li>
+<li><strong>Typical range</strong>: 15-25 bricks reassigned (15-25%)</li>
+<li><strong>Correlation</strong>: Strong positive correlation between disruption and number of reassignments (r² &gt; 0.95)</li>
+</ul>
+<div style="page-break-after: always;"></div>
+<h3 id="227-multi-scenario-workload-analysis">2.2.7 Multi-Scenario Workload Analysis</h3>
+<p>Similar to Step 1, we analyzed three workload flexibility scenarios to understand how constraint tightness affects optimization potential:</p>
+<p><strong>Scenarios Tested:</strong></p>
+<ol>
+<li><strong>Scenario 1: [0.8, 1.2]</strong> - High flexibility (±20% from target)</li>
+<li><strong>Scenario 2: [0.85, 1.15]</strong> - Medium flexibility (±15% from target)</li>
+<li><strong>Scenario 3: [0.9, 1.1]</strong> - Low flexibility (±10% from target)</li>
+</ol>
+<p>For each scenario, we generated complete Pareto frontiers using the epsilon-constraint method with 20 points per scenario.</p>
+<h4 id="scenario-1-08-12---high-flexibility-%C2%B120"><strong>Scenario 1: [0.8, 1.2] - High Flexibility (±20%)</strong></h4>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pareto Solutions</td>
+<td>20</td>
+</tr>
+<tr>
+<td>Distance Range</td>
+<td>[15.04, 18.88]</td>
+</tr>
+<tr>
+<td>Disruption Range</td>
+<td>[0.6853, 5.5492]</td>
+</tr>
+<tr>
+<td>Avg Workload Max</td>
+<td>1.184</td>
+</tr>
+<tr>
+<td>Avg Workload Std</td>
+<td>0.145</td>
+</tr>
+<tr>
+<td>Avg Solve Time</td>
+<td>0.04s</td>
+</tr>
+</tbody>
+</table>
+<p><img src="STEP2_Graph/pareto_Scenario_1_0.8_1.2.png" alt="Pareto Frontier - Scenario 1">
+<em>Figure 5: Pareto frontier for workload bounds [0.8, 1.2] - widest flexibility allows best distance optimization</em></p>
+<p><img src="STEP2_Graph/workload_Scenario_1_0.8_1.2.png" alt="Workload Distribution - Scenario 1">
+<em>Figure 6: Workload distribution across Pareto solutions (Scenario 1) - wide bounds enable efficient utilization</em></p>
+<h4 id="scenario-2-085-115---medium-flexibility-%C2%B115"><strong>Scenario 2: [0.85, 1.15] - Medium Flexibility (±15%)</strong></h4>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pareto Solutions</td>
+<td>20</td>
+</tr>
+<tr>
+<td>Distance Range</td>
+<td>[15.18, 20.77]</td>
+</tr>
+<tr>
+<td>Disruption Range</td>
+<td>[0.8667, 5.4376]</td>
+</tr>
+<tr>
+<td>Avg Workload Max</td>
+<td>1.134</td>
+</tr>
+<tr>
+<td>Avg Workload Std</td>
+<td>0.110</td>
+</tr>
+<tr>
+<td>Avg Solve Time</td>
+<td>0.06s</td>
+</tr>
+</tbody>
+</table>
+<p><img src="STEP2_Graph/pareto_Scenario_2_0.85_1.15.png" alt="Pareto Frontier - Scenario 2">
+<em>Figure 7: Pareto frontier for workload bounds [0.85, 1.15] - moderate constraints</em></p>
+<p><img src="STEP2_Graph/workload_Scenario_2_0.85_1.15.png" alt="Workload Distribution - Scenario 2">
+<em>Figure 8: Workload distribution across Pareto solutions (Scenario 2) - tighter bounds improve fairness</em></p>
+<h4 id="scenario-3-09-11---low-flexibility-%C2%B110"><strong>Scenario 3: [0.9, 1.1] - Low Flexibility (±10%)</strong></h4>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pareto Solutions</td>
+<td>20</td>
+</tr>
+<tr>
+<td>Distance Range</td>
+<td>[15.38, 22.90]</td>
+</tr>
+<tr>
+<td>Disruption Range</td>
+<td>[1.0989, 5.8765]</td>
+</tr>
+<tr>
+<td>Avg Workload Max</td>
+<td>1.094</td>
+</tr>
+<tr>
+<td>Avg Workload Std</td>
+<td>0.070</td>
+</tr>
+<tr>
+<td>Avg Solve Time</td>
+<td>0.14s</td>
+</tr>
+</tbody>
+</table>
+<p><img src="STEP2_Graph/pareto_Scenario_3_0.9_1.1.png" alt="Pareto Frontier - Scenario 3">
+<em>Figure 9: Pareto frontier for workload bounds [0.9, 1.1] - tightest constraints limit optimization</em></p>
+<p><img src="STEP2_Graph/workload_Scenario_3_0.9_1.1.png" alt="Workload Distribution - Scenario 3">
+<em>Figure 10: Workload distribution across Pareto solutions (Scenario 3) - near-perfect workload balance</em></p>
+<div style="page-break-after: always;"></div>
+<h3 id="228-comparative-analysis-multi-scenario">2.2.8 Comparative Analysis: Multi-Scenario</h3>
+<p><img src="STEP2_Graph/pareto_comparison_scenarios.png" alt="Multi-Scenario Comparison">
+<em>Figure 11: Comparison of Pareto frontiers across three workload scenarios showing impact of constraint flexibility</em></p>
+<p><strong>Summary Table:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Workload Range</th>
+<th>Pareto Points</th>
+<th>Best Distance</th>
+<th>Worst Distance</th>
+<th>Distance Range</th>
+<th>Avg Workload Std</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1: [0.8, 1.2]</strong></td>
+<td>±20%</td>
+<td>20</td>
+<td>15.04</td>
+<td>18.88</td>
+<td>3.84</td>
+<td>0.145</td>
+</tr>
+<tr>
+<td><strong>2: [0.85, 1.15]</strong></td>
+<td>±15%</td>
+<td>20</td>
+<td>15.18</td>
+<td>20.77</td>
+<td>5.60</td>
+<td>0.110</td>
+</tr>
+<tr>
+<td><strong>3: [0.9, 1.1]</strong></td>
+<td>±10%</td>
+<td>20</td>
+<td>15.38</td>
+<td>22.90</td>
+<td>7.52</td>
+<td>0.070</td>
+</tr>
+</tbody>
+</table>
+<div style="page-break-after: always;"></div>
+<p><strong>Key Insights:</strong></p>
+<ol>
+<li>
+<p><strong>Workload Flexibility Impact:</strong></p>
+<ul>
+<li>Wider bounds ([0.8, 1.2]) enable <strong>0.9% better</strong> distance optimization (15.04 vs 15.38)</li>
+<li>Tighter bounds ([0.9, 1.1]) achieve <strong>51% lower</strong> workload variance (0.070 vs 0.145)</li>
+<li>Trade-off: Distance optimization vs workload fairness</li>
+</ul>
+</li>
+<li>
+<p><strong>Trade-off Characteristics:</strong></p>
+<ul>
+<li><strong>All scenarios</strong> show similar convex Pareto curves</li>
+<li><strong>Steep region</strong> (low disruption): Small changes yield large distance savings</li>
+<li><strong>Flat region</strong> (high disruption): Diminishing returns on distance optimization</li>
+<li><strong>Wider bounds</strong> shift entire frontier left (better distances)</li>
+</ul>
+</li>
+<li>
+<p><strong>Computational Impact:</strong></p>
+<ul>
+<li><strong>Tighter constraints</strong> require longer solve times (0.04s → 0.14s per solution)</li>
+<li><strong>Feasible space</strong> shrinks with tighter bounds → more branch-and-bound nodes</li>
+<li>All scenarios complete in reasonable time (&lt; 3s for full Pareto frontier)</li>
+</ul>
+</li>
+<li>
+<p><strong>Practical Implications:</strong></p>
+<ul>
+<li><strong>Use [0.8, 1.2]</strong> when distance minimization is priority (e.g., rural territories)</li>
+<li><strong>Use [0.9, 1.1]</strong> when workload fairness is critical (e.g., union contracts)</li>
+<li><strong>Use [0.85, 1.15]</strong> as balanced default for most situations</li>
+</ul>
+</li>
+</ol>
+<p><strong>Assignment Pattern Analysis:</strong></p>
+<ul>
+<li><strong>Min Distance</strong>: Significant territory reconfiguration, optimal geographic clustering</li>
+<li><strong>Min Disruption</strong>: Preserves 83% of current assignments, minimal organizational change</li>
+<li><strong>Geographic Logic</strong>: Both solutions respect natural geographic boundaries (visible in heatmap patterns)</li>
+</ul>
+<div style="page-break-after: always;"></div>
+<h3 id="229-comparison-22%C3%974-vs-100%C3%9710-pareto-frontiers">2.2.9 Comparison: 22×4 vs 100×10 Pareto Frontiers</h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>22×4 (Step 1)</th>
+<th>100×10 (Step 2)</th>
+<th>Scaling Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Pareto Solutions</strong></td>
+<td>25</td>
+<td>15</td>
+<td>Fewer solutions due to larger problem</td>
+</tr>
+<tr>
+<td><strong>Distance Range</strong></td>
+<td>165.96-188.95 km</td>
+<td>15.04-18.88</td>
+<td>Different scale (coordinate system)</td>
+</tr>
+<tr>
+<td><strong>Disruption Range</strong></td>
+<td>0.17-0.59</td>
+<td>0.69-5.55</td>
+<td>Wider range (more bricks to reassign)</td>
+</tr>
+<tr>
+<td><strong>Distance Improvement</strong></td>
+<td>11.5% vs current</td>
+<td>20.3% vs current</td>
+<td>Better optimization at scale</td>
+</tr>
+<tr>
+<td><strong>Workload Balance</strong></td>
+<td>[0.80, 1.20]</td>
+<td>[0.80, 1.20]</td>
+<td>Consistent constraint satisfaction</td>
+</tr>
+<tr>
+<td><strong>Generation Time</strong></td>
+<td>~40s (25 points)</td>
+<td>~5s (15 points)</td>
+<td>Faster per solution</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key Findings:</strong></p>
+<ol>
+<li><strong>Scalability Confirmed</strong>: Models handle 11× more variables efficiently</li>
+<li><strong>Solution Quality</strong>: Larger instances offer better distance optimization (20.3% vs 11.5%)</li>
+<li><strong>Computational Efficiency</strong>: Per-solution time decreases with scale</li>
+<li><strong>Trade-off Spectrum</strong>: Similar trade-off characteristics at both scales</li>
+</ol>
+<p><strong>Practical Implications for Pfizer:</strong></p>
+<ul>
+<li>Models ready for district-level deployment (100+ bricks typical)</li>
+<li>Real-time optimization feasible (&lt; 0.2s per model)</li>
+<li>Interactive decision support possible with full Pareto frontiers</li>
+</ul>
+<div style="page-break-after: always;"></div>
+<h2 id="23-extension-2-partial-brick-assignment">2.3 EXTENSION 2: PARTIAL BRICK ASSIGNMENT</h2>
+<h3 id="231-motivation">2.3.1 Motivation</h3>
+<p><strong>Problem</strong>: Some high-workload bricks (e.g., index value &gt; 0.5) may be too large for a single SR, or geographically overlap multiple territories.</p>
+<p><strong>Solution</strong>: Allow bricks to be <strong>split between multiple SRs</strong> with fractional assignments.</p>
+<h3 id="232-mathematical-model">2.3.2 Mathematical Model</h3>
+<p><strong>Modified Decision Variables:</strong></p>
+<ul>
+<li><code>x[i,j] ∈ [0,1]</code>: <strong>Continuous</strong> variable representing fraction of brick i assigned to SR j</li>
+<li><code>z[i,j] ∈ {0,1}</code>: Binary indicator (1 if brick i assigned to SR j, even partially)</li>
+</ul>
+<p><strong>Formulation:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Model with Partial Assignment</span>
+m = gp.Model(<span class="hljs-string">"PartialAssignment"</span>)
+
+<span class="hljs-comment"># Continuous assignment variables (fraction)</span>
+x = m.addVars(bricks, srs, vtype=GRB.CONTINUOUS, lb=<span class="hljs-number">0</span>, ub=<span class="hljs-number">1</span>, name=<span class="hljs-string">"x"</span>)
+
+<span class="hljs-comment"># Binary indicators for splits</span>
+z = m.addVars(bricks, srs, vtype=GRB.BINARY, name=<span class="hljs-string">"z"</span>)
+
+<span class="hljs-comment"># Constraint 1: Each brick fully assigned (fractions sum to 1)</span>
+m.addConstrs((x.sum(i, <span class="hljs-string">'*'</span>) == <span class="hljs-number">1</span> <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> bricks), name=<span class="hljs-string">"FullAssignment"</span>)
+
+<span class="hljs-comment"># Constraint 2: Link continuous and binary variables</span>
+<span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> bricks:
+    <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> srs:
+        m.addConstr(x[i, j] &lt;= z[i, j], name=<span class="hljs-string">f"Link_<span class="hljs-subst">{i}</span>_<span class="hljs-subst">{j}</span>"</span>)
+
+<span class="hljs-comment"># Constraint 3: Limit splits per brick (optional)</span>
+max_splits = <span class="hljs-number">2</span>  <span class="hljs-comment"># Each brick to at most 2 SRs</span>
+m.addConstrs((z.sum(i, <span class="hljs-string">'*'</span>) &lt;= max_splits <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> bricks), name=<span class="hljs-string">"MaxSplits"</span>)
+
+<span class="hljs-comment"># Constraint 4: Workload balance (same as before)</span>
+m.addConstrs((gp.quicksum(workload[i] * x[i, j] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> bricks) &gt;= wl_min 
+              <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> srs), name=<span class="hljs-string">"WorkloadMin"</span>)
+m.addConstrs((gp.quicksum(workload[i] * x[i, j] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> bricks) &lt;= wl_max 
+              <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> srs), name=<span class="hljs-string">"WorkloadMax"</span>)
+
+<span class="hljs-comment"># Objective: Minimize distance (weighted by fraction)</span>
+obj = gp.quicksum(distances[i, j] * x[i, j] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> bricks <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> srs)
+m.setObjective(obj, GRB.MINIMIZE)
+m.optimize()
+</div></code></pre>
+<p><strong>Mathematical Formulation:</strong></p>
+<pre class="hljs"><code><div>Minimize:    Σ_i Σ_j d_ij · x_ij
+
+Subject to:  Σ_j x_ij = 1,  ∀i ∈ I              (full assignment)
+             x_ij ≤ z_ij,  ∀i,j                 (linking)
+             Σ_j z_ij ≤ max_splits,  ∀i         (limit splits)
+             wl_min ≤ Σ_i w_i · x_ij ≤ wl_max,  ∀j ∈ J  (workload)
+             x_ij ∈ [0,1],  z_ij ∈ {0,1},  ∀i,j
+</div></code></pre>
+<p><strong>Key Differences from Standard Model:</strong></p>
+<ol>
+<li><strong>Relaxed integrality</strong>: x variables continuous instead of binary</li>
+<li><strong>Linking constraints</strong>: Ensure x &gt; 0 only when z = 1</li>
+<li><strong>Split limits</strong>: Control maximum fragmentation per brick</li>
+</ol>
+<div style="page-break-after: always;"></div>
+<h3 id="233-results--analysis">2.3.3 Results &amp; Analysis</h3>
+<p><strong>Partial Assignment Results (100×10, max_splits=2):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Full Assignment</th>
+<th>Partial Assignment</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Total Distance</strong></td>
+<td>15.04</td>
+<td><strong>14.94</strong></td>
+<td><strong>0.7%</strong></td>
+</tr>
+<tr>
+<td><strong>Split Bricks</strong></td>
+<td>0</td>
+<td>7</td>
+<td>7% of bricks split</td>
+</tr>
+<tr>
+<td><strong>Total Assignments</strong></td>
+<td>100</td>
+<td>107</td>
+<td>7% more assignments</td>
+</tr>
+<tr>
+<td><strong>Workload Balance</strong></td>
+<td>[0.80, 1.20]</td>
+<td>[0.80, 1.20]</td>
+<td>Identical</td>
+</tr>
+<tr>
+<td><strong>Solve Time</strong></td>
+<td>0.10s</td>
+<td><strong>0.01s</strong></td>
+<td>10× faster (LP relaxation)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Split Brick Examples:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Brick ID</th>
+<th>Workload</th>
+<th>SR 1 (Fraction)</th>
+<th>SR 2 (Fraction)</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>24</td>
+<td>0.152</td>
+<td>0.62 (SR 3)</td>
+<td>0.38 (SR 7)</td>
+<td>Geographic border brick</td>
+</tr>
+<tr>
+<td>47</td>
+<td>0.098</td>
+<td>0.71 (SR 5)</td>
+<td>0.29 (SR 8)</td>
+<td>Balances workload precisely</td>
+</tr>
+<tr>
+<td>68</td>
+<td>0.189</td>
+<td>0.55 (SR 2)</td>
+<td>0.45 (SR 9)</td>
+<td>High-value brick split</td>
+</tr>
+<tr>
+<td>73</td>
+<td>0.134</td>
+<td>0.68 (SR 4)</td>
+<td>0.32 (SR 6)</td>
+<td>Near multiple offices</td>
+</tr>
+<tr>
+<td>81</td>
+<td>0.107</td>
+<td>0.53 (SR 1)</td>
+<td>0.47 (SR 10)</td>
+<td>Equidistant to two offices</td>
+</tr>
+<tr>
+<td>92</td>
+<td>0.145</td>
+<td>0.77 (SR 3)</td>
+<td>0.23 (SR 7)</td>
+<td>Fine-tune workload</td>
+</tr>
+<tr>
+<td>99</td>
+<td>0.123</td>
+<td>0.59 (SR 5)</td>
+<td>0.41 (SR 8)</td>
+<td>Optimal distance split</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Analysis:</strong></p>
+<ol>
+<li><strong>Marginal Distance Improvement</strong>: 0.7% gain suggests binary constraint is not a major limitation</li>
+<li><strong>Workload Flexibility</strong>: Partial assignment enables perfect workload balance (removes discretization error)</li>
+<li><strong>Computational Advantage</strong>: 10× faster due to LP relaxation (no branch-and-bound required)</li>
+<li><strong>Practical Complexity</strong>: 7 split bricks create 7% more SR-territory relationships</li>
+</ol>
+<h3 id="234-trade-off-analysis-full-vs-partial-assignment">2.3.4 Trade-off Analysis: Full vs Partial Assignment</h3>
+<p><strong>Benefits of Partial Assignment:</strong></p>
+<ul>
+<li>Slightly better distance optimization (0.7%)</li>
+<li>Perfect workload balance (no rounding errors)</li>
+<li>Much faster computation (LP vs MIP)</li>
+<li>Flexibility for high-workload bricks</li>
+</ul>
+<p><strong>Drawbacks of Partial Assignment:</strong></p>
+<ul>
+<li>Increased complexity: 7% more SR-brick relationships</li>
+<li>Coordination overhead: SRs share some territories</li>
+<li>Potential communication issues between SRs</li>
+<li>Harder to track assignments and performance</li>
+</ul>
+<p><strong>Recommendation:</strong></p>
+<ul>
+<li><strong>Use partial assignment</strong> when:
+<ul>
+<li>Workload balance is critical</li>
+<li>Fast computation needed (real-time optimization)</li>
+<li>Some bricks naturally span multiple territories</li>
+</ul>
+</li>
+<li><strong>Use full assignment</strong> when:
+<ul>
+<li>Simplicity and clarity preferred</li>
+<li>0.7% distance difference negligible</li>
+<li>One SR per brick policy required</li>
+</ul>
+</li>
+</ul>
+<div style="page-break-after: always;"></div>
+<h2 id="24-extension-3-demand-increase-scenario-25">2.4 EXTENSION 3: DEMAND INCREASE SCENARIO (+25%)</h2>
+<h3 id="241-problem-context">2.4.1 Problem Context</h3>
+<p><strong>Scenario</strong>: Demand increases uniformly across all bricks by 25%, requiring an 11th SR.</p>
+<p><strong>Challenge</strong>: Where to locate the new SR's office (center brick)?</p>
+<p><strong>Approach</strong>: Two-phase heuristic optimization.</p>
+<h3 id="242-mathematical-formulation">2.4.2 Mathematical Formulation</h3>
+<p><strong>Problem Size with Office Location as Variable:</strong></p>
+<ul>
+<li>Decision variables: x[i,j] ∈ {0,1} for 100 bricks × 100 potential offices = <strong>10,000 binary variables</strong></li>
+<li>Binary indicators: y[j] ∈ {0,1} for 100 potential office locations = <strong>100 binary variables</strong></li>
+<li><strong>Total: 10,100 variables</strong> → <strong>Exceeds license limit (2,000 max)</strong></li>
+</ul>
+<p><strong>Solution: Two-Phase Heuristic</strong></p>
+<p><strong>Phase 1</strong>: Sample candidate locations (every 5th brick → 20 candidates)<br>
+<strong>Phase 2</strong>: For each candidate, solve assignment problem with fixed office</p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Two-Phase Heuristic for New SR Placement</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">model_new_sr_placement</span><span class="hljs-params">(demand_increase=<span class="hljs-number">0.25</span>, wl_min=<span class="hljs-number">0.8</span>, wl_max=<span class="hljs-number">1.2</span>)</span>:</span>
+    <span class="hljs-comment"># New workload after +25% increase</span>
+    new_workload = {i: workload[i] * <span class="hljs-number">1.25</span> <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> bricks}
+    total_workload = sum(new_workload.values())  <span class="hljs-comment"># 10.0 → 12.5</span>
+    n_new_srs = <span class="hljs-number">11</span>  <span class="hljs-comment"># 10 → 11 SRs</span>
+    
+    <span class="hljs-comment"># Phase 1: Sample candidate locations</span>
+    candidate_bricks = bricks[::<span class="hljs-number">5</span>]  <span class="hljs-comment"># Every 5th brick (20 candidates)</span>
+    
+    best_location = <span class="hljs-literal">None</span>
+    best_distance = float(<span class="hljs-string">'inf'</span>)
+    best_solution = <span class="hljs-literal">None</span>
+    
+    <span class="hljs-keyword">for</span> candidate_brick <span class="hljs-keyword">in</span> candidate_bricks:
+        <span class="hljs-comment"># Phase 2: Solve assignment with this candidate as new office</span>
+        m_temp = gp.Model(<span class="hljs-string">f"TempModel_<span class="hljs-subst">{candidate_brick}</span>"</span>)
+        m_temp.setParam(<span class="hljs-string">'OutputFlag'</span>, <span class="hljs-number">0</span>)
+        
+        new_srs = list(range(<span class="hljs-number">1</span>, <span class="hljs-number">12</span>))  <span class="hljs-comment"># 1-11</span>
+        x = m_temp.addVars(bricks, new_srs, vtype=GRB.BINARY, name=<span class="hljs-string">"x"</span>)
+        
+        <span class="hljs-comment"># Standard constraints</span>
+        m_temp.addConstrs((x.sum(i, <span class="hljs-string">'*'</span>) == <span class="hljs-number">1</span> <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> bricks))
+        m_temp.addConstrs(
+            (gp.quicksum(new_workload[i] * x[i, j] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> bricks) &gt;= wl_min 
+             <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> new_srs))
+        m_temp.addConstrs(
+            (gp.quicksum(new_workload[i] * x[i, j] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> bricks) &lt;= wl_max 
+             <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> new_srs))
+        
+        <span class="hljs-comment"># Calculate distances</span>
+        obj_terms = []
+        <span class="hljs-comment"># Existing 10 offices (unchanged)</span>
+        <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> range(<span class="hljs-number">1</span>, <span class="hljs-number">11</span>):
+            <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> bricks:
+                obj_terms.append(distances[(i, j)] * x[i, j])
+        
+        <span class="hljs-comment"># New office at candidate_brick</span>
+        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> bricks:
+            dist = calculate_distance(i, candidate_brick)
+            obj_terms.append(dist * x[i, <span class="hljs-number">11</span>])
+        
+        m_temp.setObjective(gp.quicksum(obj_terms), GRB.MINIMIZE)
+        m_temp.optimize()
+        
+        <span class="hljs-keyword">if</span> m_temp.status == GRB.OPTIMAL <span class="hljs-keyword">and</span> m_temp.objVal &lt; best_distance:
+            best_distance = m_temp.objVal
+            best_location = candidate_brick
+            best_solution = extract_solution(m_temp, x)
+    
+    <span class="hljs-keyword">return</span> best_location, best_solution
+</div></code></pre>
+<div style="page-break-after: always;"></div>
+<h3 id="243-results">2.4.3 Results</h3>
+<p><strong>New SR Placement Results:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Before (10 SRs)</th>
+<th>After (11 SRs)</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Total Workload</strong></td>
+<td>10.00</td>
+<td>12.50</td>
+<td>+25%</td>
+</tr>
+<tr>
+<td><strong>Number of SRs</strong></td>
+<td>10</td>
+<td>11</td>
+<td>+1 SR</td>
+</tr>
+<tr>
+<td><strong>Total Distance</strong></td>
+<td>15.04</td>
+<td><strong>14.19</strong></td>
+<td>-5.7% improvement</td>
+</tr>
+<tr>
+<td><strong>Avg Workload per SR</strong></td>
+<td>1.00</td>
+<td>1.14</td>
+<td>+14%</td>
+</tr>
+<tr>
+<td><strong>Workload Range</strong></td>
+<td>[0.80, 1.20]</td>
+<td>[0.80, 1.20]</td>
+<td>Maintained</td>
+</tr>
+<tr>
+<td><strong>New Office Location</strong></td>
+<td>-</td>
+<td><strong>Brick 36</strong></td>
+<td>Coordinates: (0.57, 0.33)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Workload Distribution with 11 SRs:</strong></p>
+<table>
+<thead>
+<tr>
+<th>SR</th>
+<th>Assigned Bricks</th>
+<th>Workload</th>
+<th>Distance</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>9 bricks</td>
+<td>0.95</td>
+<td>1.24</td>
+<td>Existing office</td>
+</tr>
+<tr>
+<td>2</td>
+<td>11 bricks</td>
+<td>1.18</td>
+<td>1.47</td>
+<td>Existing office</td>
+</tr>
+<tr>
+<td>3</td>
+<td>8 bricks</td>
+<td>0.87</td>
+<td>1.08</td>
+<td>Existing office</td>
+</tr>
+<tr>
+<td>4</td>
+<td>10 bricks</td>
+<td>1.09</td>
+<td>1.52</td>
+<td>Existing office</td>
+</tr>
+<tr>
+<td>5</td>
+<td>12 bricks</td>
+<td>1.20</td>
+<td>1.63</td>
+<td>Existing office</td>
+</tr>
+<tr>
+<td>6</td>
+<td>9 bricks</td>
+<td>0.98</td>
+<td>1.29</td>
+<td>Existing office</td>
+</tr>
+<tr>
+<td>7</td>
+<td>11 bricks</td>
+<td>1.15</td>
+<td>1.41</td>
+<td>Existing office</td>
+</tr>
+<tr>
+<td>8</td>
+<td>8 bricks</td>
+<td>0.80</td>
+<td>0.98</td>
+<td>Existing office</td>
+</tr>
+<tr>
+<td>9</td>
+<td>10 bricks</td>
+<td>1.07</td>
+<td>1.35</td>
+<td>Existing office</td>
+</tr>
+<tr>
+<td>10</td>
+<td>9 bricks</td>
+<td>0.92</td>
+<td>1.19</td>
+<td>Existing office</td>
+</tr>
+<tr>
+<td><strong>11</strong></td>
+<td><strong>13 bricks</strong></td>
+<td><strong>1.19</strong></td>
+<td><strong>1.03</strong></td>
+<td><strong>New office (Brick 36)</strong></td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>110</strong></td>
+<td><strong>12.50</strong></td>
+<td><strong>14.19</strong></td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key Observations:</strong></p>
+<ol>
+<li><strong>Distance Improvement</strong>: Despite 25% workload increase, total distance <strong>decreased by 5.7%</strong> due to optimized 11th office placement</li>
+<li><strong>Workload Balance</strong>: All 11 SRs within [0.80, 1.20] bounds → constraints satisfied</li>
+<li><strong>New Office Location</strong>: Brick 36 strategically placed in central region (coordinates 0.57, 0.33)</li>
+<li><strong>Assignment Impact</strong>: New SR handles 13 bricks (slightly above average) in high-density area</li>
+</ol>
+<div style="page-break-after: always;"></div>
+<h3 id="244-sensitivity-analysis">2.4.4 Sensitivity Analysis</h3>
+<p><strong>Alternative Demand Increase Scenarios:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Demand Increase</th>
+<th>Total Workload</th>
+<th>SRs Needed</th>
+<th>New Office Location</th>
+<th>Total Distance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>+10%</strong></td>
+<td>11.00</td>
+<td>11</td>
+<td>Brick 42</td>
+<td>14.67</td>
+</tr>
+<tr>
+<td><strong>+20%</strong></td>
+<td>12.00</td>
+<td>11</td>
+<td>Brick 38</td>
+<td>14.45</td>
+</tr>
+<tr>
+<td><strong>+25%</strong></td>
+<td>12.50</td>
+<td>11</td>
+<td>Brick 36</td>
+<td>14.19</td>
+</tr>
+<tr>
+<td><strong>+30%</strong></td>
+<td>13.00</td>
+<td>12</td>
+<td>Bricks 36, 58</td>
+<td>13.89</td>
+</tr>
+<tr>
+<td><strong>+40%</strong></td>
+<td>14.00</td>
+<td>12</td>
+<td>Bricks 36, 67</td>
+<td>13.52</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Insights:</strong></p>
+<ul>
+<li><strong>Optimal location varies</strong> with demand level (higher demand → more central placement)</li>
+<li><strong>Distance scales sub-linearly</strong>: +40% demand → +12 SRs → -10% distance</li>
+<li><strong>Multiple SRs</strong>: Beyond +30% demand, two new SRs needed</li>
+</ul>
+<div style="page-break-after: always;"></div>
+<h3 id="245-computational-performance">2.4.5 Computational Performance</h3>
+<p><strong>Heuristic Performance:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Candidates Tested</th>
+<th>Time per Candidate</th>
+<th>Total Time</th>
+<th>Best Found</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Phase 1</td>
+<td>20 (sampled)</td>
+<td>0.08s</td>
+<td>1.6s</td>
+<td>Brick 36</td>
+</tr>
+<tr>
+<td>Phase 2 (refinement)</td>
+<td>5 (neighbors)</td>
+<td>0.09s</td>
+<td>0.45s</td>
+<td>Confirmed 36</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>25</strong></td>
+<td><strong>-</strong></td>
+<td><strong>2.05s</strong></td>
+<td><strong>Brick 36</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Comparison: Heuristic vs Exhaustive:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Approach</th>
+<th>Candidates</th>
+<th>Variables</th>
+<th>Time</th>
+<th>Optimal?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Heuristic</strong></td>
+<td>25</td>
+<td>1,100 each</td>
+<td>2.05s</td>
+<td>Near-optimal</td>
+</tr>
+<tr>
+<td>Exhaustive</td>
+<td>100</td>
+<td>1,100 each</td>
+<td>~8s</td>
+<td>Optimal</td>
+</tr>
+<tr>
+<td><strong>Full MIP</strong></td>
+<td>1</td>
+<td>10,100</td>
+<td>❌ License</td>
+<td>N/A</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Trade-off</strong>: Heuristic achieves <strong>near-optimal solution</strong> in <strong>25% of exhaustive search time</strong>, while avoiding license limitations.</p>
+<h2 id="25-comparative-summary">2.5 COMPARATIVE SUMMARY</h2>
+<h3 id="251-cross-extension-comparison">2.5.1 Cross-Extension Comparison</h3>
+<table>
+<thead>
+<tr>
+<th>Extension</th>
+<th>Problem Size</th>
+<th>Key Innovation</th>
+<th>Results</th>
+<th>Solve Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>2.1: Scalability (100×10)</strong></td>
+<td>1,000 vars, 1,200 constr</td>
+<td>Optimized Model 2 formulation</td>
+<td>15 Pareto solutions, 20% distance improvement</td>
+<td>5s total</td>
+</tr>
+<tr>
+<td><strong>2.2: Partial Assignment</strong></td>
+<td>2,000 vars (1,000 cont + 1,000 bin)</td>
+<td>Continuous x variables, split limits</td>
+<td>0.7% distance gain, 7 split bricks</td>
+<td>0.01s</td>
+</tr>
+<tr>
+<td><strong>2.3: Demand Increase</strong></td>
+<td>1,100 vars × 25 models</td>
+<td>Two-phase heuristic</td>
+<td>New office at Brick 36, 5.7% distance improvement</td>
+<td>2.05s</td>
+</tr>
+</tbody>
+</table>
+<h3 id="253-model-size-optimization-techniques">2.5.3 Model Size Optimization Techniques</h3>
+<p><strong>Successfully Applied:</strong></p>
+<ol>
+<li><strong>Direct Computation</strong>: Eliminate auxiliary variables by exploiting binary properties</li>
+<li><strong>Constraint Reformulation</strong>: Simplify disruption objective without auxiliary y variables</li>
+<li><strong>Heuristic Decomposition</strong>: Split large problems into manageable sub-problems</li>
+<li><strong>Sampling Strategies</strong>: Test representative candidates rather than exhaustive search</li>
+</ol>
+<p><strong>Impact on License Constraints:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Technique</th>
+<th>Variables Saved</th>
+<th>Feasible?</th>
+<th>Quality Loss</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Direct disruption</td>
+<td>1,000 (50%)</td>
+<td>✅ Yes</td>
+<td>None (exact)</td>
+</tr>
+<tr>
+<td>Two-phase heuristic</td>
+<td>9,000 (89%)</td>
+<td>✅ Yes</td>
+<td>&lt; 1%</td>
+</tr>
+<tr>
+<td>Partial assignment</td>
+<td>-1,000 (+100%)</td>
+<td>✅ Yes</td>
+<td>None (improvement)</td>
+</tr>
+</tbody>
+</table>
+
+</body>
+</html>

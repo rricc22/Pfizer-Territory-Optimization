@@ -294,19 +294,25 @@ class Step2Extensions:
                             disruption += self.workload[i] * x[i, j].X
                 
                 # Calculate workload metrics
-                workloads = []
+                workloads = {}
+                assignment = {}
                 for j in self.srs:
                     wl = sum(self.workload[i] * x[i, j].X for i in self.bricks)
-                    workloads.append(wl)
+                    workloads[j] = wl
+                    assignment[j] = [i for i in self.bricks if x[i, j].X > 0.5]
                 
+                import time
                 results.append({
                     'epsilon': eps,
                     'distance': distance,
                     'disruption': disruption,
-                    'workload_max': max(workloads),
-                    'workload_min': min(workloads),
-                    'workload_std': np.std(workloads),
-                    'num_changes': self._count_reassignments(m, x, A)
+                    'workload_max': max(workloads.values()),
+                    'workload_min': min(workloads.values()),
+                    'workload_std': np.std(list(workloads.values())),
+                    'num_changes': self._count_reassignments(m, x, A),
+                    'workloads': workloads,
+                    'assignment': assignment,
+                    'solve_time': m.Runtime
                 })
         
         df_results = pd.DataFrame(results)
