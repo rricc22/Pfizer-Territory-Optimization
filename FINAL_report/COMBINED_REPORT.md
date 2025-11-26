@@ -101,12 +101,132 @@ Disruption is weighted by brick workload, giving higher importance to changes af
 
 ### 3.1 Problem Specification
 
+In this first phase, we consider SR office locations as fixed parameters rather than decision variables. This simplifies the problem while allowing us to explore the fundamental trade-offs between distance, disruption, and workload balance.
+
 Instance size: 22 bricks, 4 SRs  
 Office locations (fixed): SR1→Brick 4, SR2→Brick 14, SR3→Brick 16, SR4→Brick 22  
 Workload bounds: [0.8, 1.2] (±20% flexibility)  
 Current assignment baseline: Distance = 187.41 km, Disruption = 0 (by definition)
 
-### 3.2 Mono-Objective Results
+### 3.2 Mono-Objective Models Implementation
+
+Following the project requirements, we implemented two mono-objective models using Gurobi Python API.
+
+#### Model 1: Minimize Distance
+
+The first model optimizes operational efficiency by minimizing total travel distance:
+
+<div style="page-break-after: always;"></div>
+
+```python
+import gurobipy as gp
+from gurobipy import GRB
+
+def model_1_minimize_distance(bricks, srs, distances, workload, wl_min, wl_max):
+    """
+    Model 1: Minimize total distance traveled by all SRs
+    
+    Args:
+        bricks: List of brick IDs
+        srs: List of SR IDs
+        distances: Dict mapping (brick, sr) to distance
+        workload: Dict mapping brick to workload value
+        wl_min, wl_max: Workload bounds per SR
+    
+    Returns:
+        Optimized Gurobi model
+    """
+    m = gp.Model("Model1_MinDistance")
+    m.setParam('OutputFlag', 0)  # Suppress output
+    
+    # Decision variables: x[i,j] = 1 if brick i assigned to SR j
+    x = m.addVars(bricks, srs, vtype=GRB.BINARY, name="x")
+    
+    # Constraint 1: Each brick assigned to exactly one SR
+    m.addConstrs(
+        (x.sum(i, '*') == 1 for i in bricks), 
+        name="AssignBrick"
+    )
+    # Constraint 2: Workload balance - minimum bound
+    m.addConstrs(
+        (gp.quicksum(workload[i] * x[i, j] for i in bricks) >= wl_min 
+         for j in srs), 
+        name="WorkloadMin"
+    )
+    # Constraint 3: Workload balance - maximum bound
+    m.addConstrs(
+        (gp.quicksum(workload[i] * x[i, j] for i in bricks) <= wl_max 
+         for j in srs), 
+        name="WorkloadMax"
+    )
+    # Objective: Minimize total distance
+    obj = gp.quicksum(distances[i, j] * x[i, j] 
+                     for i in bricks for j in srs)
+    m.setObjective(obj, GRB.MINIMIZE)
+    
+    # Solve
+    m.optimize()
+    
+    return m, x
+```
+<div style="page-break-after: always;"></div>
+
+#### Model 2: Minimize Disruption
+
+The second model preserves organizational stability by minimizing changes to existing assignments:
+
+```python
+def model_2_minimize_disruption(bricks, srs, distances, workload, 
+                                current_assignment, wl_min, wl_max):
+    """
+    Model 2: Minimize weighted disruption to current assignments
+    
+    Args:
+        current_assignment: Dict mapping (brick, sr) to 0/1 (current state)
+        Other args same as Model 1
+    
+    Returns:
+        Optimized Gurobi model
+    """
+    m = gp.Model("Model2_MinDisruption")
+    m.setParam('OutputFlag', 0)
+    
+    # Decision variables
+    x = m.addVars(bricks, srs, vtype=GRB.BINARY, name="x")
+    y = m.addVars(bricks, srs, vtype=GRB.CONTINUOUS, name="y")  # |x - A|
+    
+    # Standard constraints (same as Model 1)
+    m.addConstrs((x.sum(i, '*') == 1 for i in bricks), name="AssignBrick")
+    m.addConstrs(
+        (gp.quicksum(workload[i] * x[i, j] for i in bricks) >= wl_min 
+         for j in srs), 
+        name="WorkloadMin"
+    )
+    m.addConstrs(
+        (gp.quicksum(workload[i] * x[i, j] for i in bricks) <= wl_max 
+         for j in srs), 
+        name="WorkloadMax"
+    )
+    
+    # Absolute value linearization: y[i,j] >= |x[i,j] - A[i,j]|
+    for i in bricks:
+        for j in srs:
+            A_ij = current_assignment.get((i, j), 0)
+            m.addConstr(y[i, j] >= x[i, j] - A_ij, name=f"AbsPos_{i}_{j}")
+            m.addConstr(y[i, j] >= A_ij - x[i, j], name=f"AbsNeg_{i}_{j}")
+    
+    # Objective: Minimize weighted disruption
+    obj = gp.quicksum(workload[i] * y[i, j] for i in bricks for j in srs)
+    m.setObjective(obj, GRB.MINIMIZE)
+    
+    m.optimize()
+    
+    return m, x, y
+```
+
+<div style="page-break-after: always;"></div>
+
+### 3.2.1 Implementation Results
 
 #### Model 1: Minimize Distance
 
@@ -123,9 +243,110 @@ Optimal solution preserves 20 out of 22 current assignments (disruption = 0.1696
 
 ### 3.3 Multi-Objective Analysis: Epsilon-Constraint Method
 
-To explore the complete trade-off spectrum, we implement the epsilon-constraint method: minimize distance subject to a constraint limiting disruption to at most ε. By varying ε across [0.1696, 0.5864], we generate 25 Pareto-optimal solutions.
+To explore the complete trade-off spectrum, we implemented the epsilon-constraint scheme as specified in the project requirements. This method minimizes distance while constraining disruption to at most ε, generating the full set of non-dominated solutions.
+
+<div style="page-break-after: always;"></div>
+
+#### Epsilon-Constraint Implementation
+
+```python
+def epsilon_constraint_method(bricks, srs, distances, workload, 
+                             current_assignment, wl_min, wl_max, 
+                             num_points=25):
+    """
+    Compute all non-dominated solutions using epsilon-constraint method
+    
+    The method works by:
+    1. Finding the range of disruption values [min_disr, max_disr]
+    2. Generating epsilon values spanning this range
+    3. For each epsilon, minimizing distance subject to disruption <= epsilon
+    
+    Returns:
+        List of Pareto-optimal solutions
+    """
+    pareto_solutions = []
+    
+    # Step 1: Find disruption range
+    # Minimum disruption: solve Model 2
+    m_min_disr, _, _ = model_2_minimize_disruption(
+        bricks, srs, distances, workload, current_assignment, wl_min, wl_max
+    )
+    min_disruption = m_min_disr.ObjVal
+    
+    # Maximum disruption: solve Model 1 and compute its disruption
+    m_min_dist, x_min_dist = model_1_minimize_distance(
+        bricks, srs, distances, workload, wl_min, wl_max
+    )
+    max_disruption = compute_disruption(x_min_dist, current_assignment, workload)
+    
+    # Step 2: Generate epsilon values
+    epsilon_values = np.linspace(min_disruption, max_disruption, num_points)
+    
+    # Step 3: Solve for each epsilon
+    for eps in epsilon_values:
+        m = gp.Model(f"EpsilonConstraint_{eps:.4f}")
+        m.setParam('OutputFlag', 0)
+        
+        # Decision variables
+        x = m.addVars(bricks, srs, vtype=GRB.BINARY, name="x")
+        y = m.addVars(bricks, srs, vtype=GRB.CONTINUOUS, name="y")
+        
+        # Standard constraints
+        m.addConstrs((x.sum(i, '*') == 1 for i in bricks), name="AssignBrick")
+        m.addConstrs(
+            (gp.quicksum(workload[i] * x[i,j] for i in bricks) >= wl_min 
+             for j in srs), 
+            name="WorkloadMin"
+        )
+        m.addConstrs(
+            (gp.quicksum(workload[i] * x[i,j] for i in bricks) <= wl_max 
+             for j in srs), 
+            name="WorkloadMax"
+        )
+        
+        # Absolute value constraints for disruption
+        for i in bricks:
+            for j in srs:
+                A_ij = current_assignment.get((i, j), 0)
+                m.addConstr(y[i, j] >= x[i, j] - A_ij)
+                m.addConstr(y[i, j] >= A_ij - x[i, j])
+        
+        # EPSILON CONSTRAINT: Disruption <= epsilon
+        disruption_expr = gp.quicksum(workload[i] * y[i, j] 
+                                     for i in bricks for j in srs)
+        m.addConstr(disruption_expr <= eps, name="EpsilonConstraint")
+        
+        # PRIMARY OBJECTIVE: Minimize distance
+        # Add small coefficient (0.0001) to break ties and ensure Pareto efficiency
+        distance_expr = gp.quicksum(distances[i, j] * x[i, j] 
+                                    for i in bricks for j in srs)
+        m.setObjective(distance_expr + 0.0001 * disruption_expr, GRB.MINIMIZE)
+        
+        # Solve
+        m.optimize()
+        
+        if m.status == GRB.OPTIMAL:
+            # Extract solution
+            solution = {
+                'distance': sum(distances[i,j] * x[i,j].X 
+                               for i in bricks for j in srs),
+                'disruption': sum(workload[i] * y[i,j].X 
+                                 for i in bricks for j in srs),
+                'assignment': {(i,j): x[i,j].X for i in bricks for j in srs},
+                'epsilon': eps
+            }
+            pareto_solutions.append(solution)
+    
+    return pareto_solutions
+```
+
+The small coefficient (0.0001) on disruption in the objective ensures we find efficient (Pareto-optimal) solutions by breaking ties in favor of lower disruption when multiple solutions achieve the same distance.
+
+<div style="page-break-after: always;"></div>
 
 **Workload Scenario Comparison:**
+
+Following project requirements, we computed non-dominated solutions for three workload intervals:
 
 | Scenario | Workload Range | Best Distance | Best Disruption | Pareto Solutions |
 |----------|----------------|---------------|-----------------|------------------|
@@ -168,21 +389,22 @@ This scenario generates 25 Pareto solutions spanning distance [165.96 km, 188.95
 ![Pareto Frontier Scenario 2](../STEP1_Graph/pareto_Scenario_2_0.85_1.15.png)
 *Figure 2c: Pareto frontier for workload bounds [0.85, 1.15] showing moderate constraint impact*
 
+![Workload Distribution Scenario 2](../STEP1_Graph/workload_Scenario_2_0.85_1.15.png)
+*Figure 2d: Workload distribution across Pareto solutions for Scenario 2*
+
 With ±15% tolerance, the best distance increases to 171.68 km. The tighter constraints eliminate extreme solutions, producing a more conservative Pareto frontier. This scenario balances efficiency and fairness, suitable for organizations with moderate workload flexibility.
 
-![Workload Distribution Scenario 2](../STEP1_Graph/workload_Scenario_2_0.85_1.15.png)
-*Figure 2b: Workload distribution across Pareto solutions showing variance within [0.8, 1.2] bounds*
 <div style="page-break-after: always;"></div>
 
 #### Scenario 3: Strict Fairness [0.9, 1.1]
 
 ![Pareto Frontier Scenario 3](../STEP1_Graph/pareto_Scenario_3_0.9_1.1.png)
-*Figure 2d: Pareto frontier for workload bounds [0.9, 1.1] showing tight workload distribution*
-
-The strictest scenario (±10%) produces identical results to Scenario 2 at this problem scale, suggesting the constraints have become binding. Workload variance drops significantly, ensuring near-perfect fairness. Organizations with union contracts or equity mandates should use this configuration.
+*Figure 2e: Pareto frontier for workload bounds [0.9, 1.1] showing tight workload distribution*
 
 ![Workload Distribution Scenario 3](../STEP1_Graph/workload_Scenario_3_0.9_1.1.png)
-*Figure 2b: Workload distribution across Pareto solutions showing variance within [0.8, 1.2] bounds*
+*Figure 2f: Workload distribution across Pareto solutions for Scenario 3*
+
+The strictest scenario (±10%) produces identical results to Scenario 2 at this problem scale, suggesting the constraints have become binding. Workload variance drops significantly, ensuring near-perfect fairness. Organizations with union contracts or equity mandates should use this configuration.
 
 <div style="page-break-after: always;"></div>
 
@@ -190,11 +412,65 @@ The strictest scenario (±10%) produces identical results to Scenario 2 at this 
 
 ### 4.1 Scalability Testing
 
-To validate real-world applicability, we scale to 100 bricks and 10 SRs. This increases decision variables from 88 to 1,000 (11.4× growth) and constraints from ~100 to ~1,200.
+As required by the project, we tested whether our models can solve the 100 bricks / 10 SRs instances. We scaled from the initial 22×4 instance to validate real-world applicability, increasing decision variables from 88 to 1,000 (11.4× growth) and constraints from ~100 to ~1,200.
 
 **Challenge:** The disruption model requires auxiliary variables y_ij to linearize absolute values, potentially requiring 2,000 variables total, exceeding Gurobi's limited license (2,000 variable maximum).
 
-**Solution:** Direct computation exploiting binary variable properties. For x, A ∈ {0,1}: |x - A| = x(1-A) + A(1-x). This eliminates y variables while maintaining exact equivalence.
+**Solution:** We developed an optimized formulation exploiting binary variable properties. For x, A ∈ {0,1}: |x - A| = x(1-A) + A(1-x). This eliminates y variables while maintaining exact equivalence.
+
+<div style="page-break-after: always;"></div>
+
+#### Optimized Model 2 for Large Instances
+
+```python
+def model_2_optimized_100x10(bricks, srs, distances, workload, 
+                            current_assignment, wl_min, wl_max):
+    """
+    Optimized disruption model that avoids auxiliary variables
+    Key innovation: Direct computation of |x-A| for binary variables
+    Variables: Only 1,000 x[i,j] instead of 2,000 (x + y)
+    """
+    m = gp.Model("Model2_Optimized_100x10")
+    m.setParam('OutputFlag', 0)
+    
+    # Only decision variables for assignment (no y variables!)
+    x = m.addVars(bricks, srs, vtype=GRB.BINARY, name="x")
+    
+    # Standard constraints
+    m.addConstrs((x.sum(i, '*') == 1 for i in bricks), name="AssignBrick")
+    m.addConstrs(
+        (gp.quicksum(workload[i] * x[i, j] for i in bricks) >= wl_min 
+         for j in srs), 
+        name="WorkloadMin"
+    )
+    m.addConstrs(
+        (gp.quicksum(workload[i] * x[i, j] for i in bricks) <= wl_max 
+         for j in srs), 
+        name="WorkloadMax"
+    )
+    
+    # OPTIMIZED OBJECTIVE: Direct disruption computation
+    # For binary x and A: |x - A| = x(1-A) + A(1-x)
+    obj_terms = []
+    for i in bricks:
+        for j in srs:
+            A_ij = current_assignment.get((i, j), 0)
+            if A_ij == 1:
+                # Was assigned: disruption if NOT assigned now
+                obj_terms.append(workload[i] * (1 - x[i, j]))
+            else:
+                # Was NOT assigned: disruption if assigned now
+                obj_terms.append(workload[i] * x[i, j])
+    
+    m.setObjective(gp.quicksum(obj_terms), GRB.MINIMIZE)
+    m.optimize()
+    
+    return m, x
+```
+
+This optimization reduced variables by 50%, enabling us to solve the 100×10 instance within license constraints.
+
+<div style="page-break-after: always;"></div>
 
 **Performance Results:**
 
@@ -210,7 +486,6 @@ Counterintuitively, larger instances solve faster due to problem structure and G
 ### 4.2 Pareto Frontier: 100×10 Instance
 
 We generated 20 Pareto solutions per scenario using epsilon-constraint across three workload flexibility levels (as in Section 3.3).
-<div style="page-break-after: always;"></div>
 
 #### Initial Analysis: Distance-Disruption Trade-off
 
@@ -272,19 +547,68 @@ Reassignment patterns show strong correlation with disruption:
 
 3. Scale Comparison: The 100×10 instance achieves 20.3% distance improvement versus current assignment, compared to 11.5% for the 22×4 instance. Larger problem sizes offer greater optimization potential due to increased flexibility in territory configuration.
 
+<div style="page-break-after: always;"></div>
+
 ### 4.3 Extension: Partial Brick Assignment
 
-Some high-workload bricks may benefit from splitting between multiple SRs. We relax integrality constraints: x_ij ∈ [0,1] represents the fraction of brick i assigned to SR j.
+As specified in Step 2 requirements, we modeled the case for partially assigning bricks (i.e., assign a brick to multiple SRs). Some high-workload bricks may benefit from splitting between multiple SRs. We relax integrality constraints: x_ij ∈ [0,1] represents the fraction of brick i assigned to SR j.
 
 **Modified Formulation:**
-```
-x_ij ∈ [0,1]  (continuous)
-z_ij ∈ {0,1}  (binary indicator)
 
-Constraints:
-  x_ij ≤ z_ij,  ∀i,j           (link fraction to indicator)
-  Σ_j z_ij ≤ max_splits,  ∀i   (limit splits per brick)
-  (other constraints unchanged)
+```python
+def model_partial_assignment(bricks, srs, distances, workload, 
+                            wl_min, wl_max, max_splits=2):
+    """
+    Model allowing partial brick assignments with split limits
+    
+    Key differences from standard model:
+    - x[i,j] continuous in [0,1] instead of binary
+    - z[i,j] binary indicators track which splits exist
+    - Constraint limits number of splits per brick
+    """
+    m = gp.Model("PartialAssignment")
+    m.setParam('OutputFlag', 0)
+    
+    # CONTINUOUS assignment variables (fraction)
+    x = m.addVars(bricks, srs, vtype=GRB.CONTINUOUS, lb=0, ub=1, name="x")
+    
+    # Binary indicators for splits
+    z = m.addVars(bricks, srs, vtype=GRB.BINARY, name="z")
+    
+    # Constraint 1: Each brick fully assigned (fractions sum to 1)
+    m.addConstrs((x.sum(i, '*') == 1 for i in bricks), name="FullAssignment")
+    
+    # Constraint 2: Link continuous and binary variables
+    # x[i,j] > 0 only if z[i,j] = 1
+    for i in bricks:
+        for j in srs:
+            m.addConstr(x[i, j] <= z[i, j], name=f"Link_{i}_{j}")
+    
+    # Constraint 3: Limit splits per brick
+    m.addConstrs(
+        (z.sum(i, '*') <= max_splits for i in bricks), 
+        name="MaxSplits"
+    )
+    
+    # Constraint 4: Workload balance (same as before)
+    m.addConstrs(
+        (gp.quicksum(workload[i] * x[i, j] for i in bricks) >= wl_min 
+         for j in srs), 
+        name="WorkloadMin"
+    )
+    m.addConstrs(
+        (gp.quicksum(workload[i] * x[i, j] for i in bricks) <= wl_max 
+         for j in srs), 
+        name="WorkloadMax"
+    )
+    
+    # Objective: Minimize distance (weighted by fraction)
+    obj = gp.quicksum(distances[i, j] * x[i, j] 
+                     for i in bricks for j in srs)
+    m.setObjective(obj, GRB.MINIMIZE)
+    m.optimize()
+    
+    return m, x, z
 ```
 
 <div style="page-break-after: always;"></div>
@@ -304,14 +628,84 @@ Seven bricks split between two SRs, primarily border territories equidistant fro
 
 ### 4.4 Extension: Demand Growth Scenario
 
-Scenario: Uniform 25% workload increase across all bricks (total workload: 10.0 → 12.5), requiring an 11th SR. Where should the new office be located?
+Following Step 2 requirements, we address the scenario where demand increases uniformly in all bricks. If demand increases by 25%, it becomes necessary to hire a new sales representative. The question is: where to locate the new SR office (center brick)?
+
+Scenario: Uniform 25% workload increase across all bricks (total workload: 10.0 → 12.5), requiring an 11th SR.
 
 **Challenge:** Full optimization with office location as a variable requires 100 bricks × 100 potential offices = 10,000 binary variables, far exceeding license limits.
 
-**Two-Phase Heuristic:**
-1. Phase 1: Sample 20 candidate locations (every 5th brick)
-2. Phase 2: For each candidate, solve assignment problem with fixed offices (1,100 variables)
-3. Select candidate yielding minimum total distance
+<div style="page-break-after: always;"></div>
+
+**Two-Phase Heuristic Solution:**
+
+```python
+def locate_new_office_demand_growth(bricks, srs, distances, workload, 
+                                   demand_increase=0.25, 
+                                   wl_min=0.8, wl_max=1.2):
+    """
+    Find optimal location for new SR office after demand increase
+    
+    Two-phase approach:
+    Phase 1: Sample candidate locations (avoids 10,000 variable problem)
+    Phase 2: Solve assignment for each candidate, select best
+    """
+    # Update workload after demand increase
+    new_workload = {i: workload[i] * (1 + demand_increase) for i in bricks}
+    total_workload = sum(new_workload.values())  # 10.0 → 12.5
+    
+    # New number of SRs needed
+    n_new_srs = 11  # 10 → 11
+    new_srs = list(range(1, n_new_srs + 1))
+    
+    # Phase 1: Sample candidate locations (every 5th brick → 20 candidates)
+    candidate_bricks = bricks[::5]
+    
+    best_location = None
+    best_distance = float('inf')
+    best_solution = None
+    
+    # Phase 2: Test each candidate
+    for candidate in candidate_bricks:
+        # Solve assignment with this candidate as 11th office
+        m = gp.Model(f"NewOffice_{candidate}")
+        m.setParam('OutputFlag', 0)
+        
+        x = m.addVars(bricks, new_srs, vtype=GRB.BINARY, name="x")
+        
+        # Standard constraints
+        m.addConstrs((x.sum(i, '*') == 1 for i in bricks))
+        m.addConstrs(
+            (gp.quicksum(new_workload[i] * x[i, j] for i in bricks) >= wl_min 
+             for j in new_srs)
+        )
+        m.addConstrs(
+            (gp.quicksum(new_workload[i] * x[i, j] for i in bricks) <= wl_max 
+             for j in new_srs)
+        )
+        
+        # Calculate distances (existing 10 offices + new at candidate)
+        obj_terms = []
+        for j in range(1, 11):  # Existing offices
+            for i in bricks:
+                obj_terms.append(distances[(i, j)] * x[i, j])
+        
+        # New office at candidate brick
+        for i in bricks:
+            dist = calculate_distance(i, candidate)
+            obj_terms.append(dist * x[i, 11])
+        
+        m.setObjective(gp.quicksum(obj_terms), GRB.MINIMIZE)
+        m.optimize()
+        
+        if m.status == GRB.OPTIMAL and m.objVal < best_distance:
+            best_distance = m.objVal
+            best_location = candidate
+            best_solution = {(i,j): x[i,j].X for i in bricks for j in new_srs}
+    
+    return best_location, best_distance, best_solution
+```
+
+<div style="page-break-after: always;"></div>
 
 **Results:**
 
@@ -330,29 +724,173 @@ Despite 25% demand growth, total distance decreases by 5.7% due to optimized off
 
 ### 5.1 Motivation and Formulation
 
-Previous phases assumed fixed office locations. Phase 3 treats office placement as decision variables, enabling identification of optimal center bricks. This adds binary variables y_j ∈ {0,1} indicating whether brick j contains an office.
+Following Step 3 requirements, we generalize the model to allow modification of the center bricks (SR office locations). Previous phases assumed fixed office locations. Phase 3 treats office placement as decision variables, enabling identification of optimal center bricks.
 
-**Extended Model:**
+As specified, we formulate a bi-objective optimization problem where positions of offices are variables and the two main objectives are:
+1. Total distance (minimize)
+2. Workload fairness of SRs (MinMax - minimize maximum workload)
+
+Additionally, following the redefined disruption measure in Step 3, disruption is now the number of relocated offices (without consideration of brick assignment changes).
+
+<div style="page-break-after: always;"></div>
+
+#### Bi-Objective Model Implementation
+
+```python
+def model_office_relocation_biobjective(bricks, srs, distances, workload, 
+                                       initial_offices, wl_min, wl_max, 
+                                       alpha=0.5):
+    """
+    Bi-objective model with relocatable office locations
+    
+    Decision variables:
+      x[i,j]: brick i assigned to office at brick j (484 for 22x4)
+      y[j]: brick j contains an office (22 for 22 bricks)
+      wm: maximum workload across all offices (continuous)
+    
+    Objectives (weighted sum):
+      alpha * distance/20 + (1-alpha) * max_workload
+    
+    Args:
+        alpha: Weight parameter (0 = pure workload, 1 = pure distance)
+        initial_offices: List of current office locations
+    """
+    m = gp.Model("OfficeRelocation_BiObjective")
+    m.setParam('OutputFlag', 0)
+    
+    # Decision variables
+    # x[i,j]: assignment (brick i → office at brick j)
+    x = m.addVars(bricks, bricks, vtype=GRB.BINARY, name="x")
+    
+    # y[j]: whether brick j contains an office
+    y = m.addVars(bricks, vtype=GRB.BINARY, name="y")
+    
+    # wm: maximum workload (for MinMax objective)
+    wm = m.addVar(vtype=GRB.CONTINUOUS, name="wm")
+    
+    # Constraint 1: Each brick assigned to exactly one office
+    m.addConstrs(
+        (x.sum(i, '*') == 1 for i in bricks), 
+        name="AssignBrick"
+    )
+    
+    # Constraint 2: Exactly n offices
+    m.addConstr(y.sum('*') == len(srs), name="ExactlyNOffices")
+    
+    # Constraint 3: Can only assign to bricks with offices
+    m.addConstrs(
+        (x[i, j] <= y[j] for i in bricks for j in bricks),
+        name="AssignOnlyToOffice"
+    )
+    
+    # Constraint 4: Workload tracking for MinMax
+    # wm >= workload at office j (for offices that exist)
+    M = sum(workload.values()) + 1  # Big-M
+    for j in bricks:
+        office_workload = gp.quicksum(workload[i] * x[i, j] for i in bricks)
+        # Only enforce if office exists at j
+        m.addConstr(
+            wm >= office_workload - M * (1 - y[j]),
+            name=f"MaxWorkload_{j}"
+        )
+    
+    # BI-OBJECTIVE: Weighted sum with normalization
+    distance_obj = gp.quicksum(distances[i, j] * x[i, j] 
+                               for i in bricks for j in bricks)
+    distance_norm = distance_obj / 20  # Normalize (expected range ~10-20)
+    workload_norm = wm                 # Expected range ~0.8-1.5
+    
+    obj = alpha * distance_norm + (1 - alpha) * workload_norm
+    m.setObjective(obj, GRB.MINIMIZE)
+    
+    m.optimize()
+    
+    return m, x, y, wm
 ```
-Decision Variables:
-  x_ij ∈ {0,1}  (brick i assigned to office at brick j)
-  y_j ∈ {0,1}   (brick j contains office)
 
-Constraints:
-  Σ_j x_ij = 1,  ∀i                   (each brick assigned once)
-  Σ_j y_j = n_offices                 (exactly n offices)
-  x_ij ≤ y_j,  ∀i,j                   (can only assign to office locations)
-  (workload constraints as before)
+<div style="page-break-after: always;"></div>
 
-Objectives:
-  1. Minimize total distance: Σ_ij d_ij · x_ij
-  2. Minimize maximum workload: min wm s.t. wm ≥ Σ_i w_i · x_ij,  ∀j
-  3. Minimize relocated offices: Σ_j∈J0 (1 - y_j)  where J0 = initial offices
+#### Three-Objective Epsilon-Constraint Method
+
+For the three-objective problem (distance, workload fairness, number of relocated offices), we implement an epsilon-constraint approach:
+
+```python
+def three_objective_epsilon_constraint(bricks, srs, distances, workload,
+                                      initial_offices, wl_min, wl_max):
+    """
+    Compute non-dominated solutions for three objectives:
+    1. Total distance (minimize)
+    2. Maximum workload (minimize) 
+    3. Number of relocated offices (minimize)
+    
+    Method: For each possible number of relocations (0 to n_offices),
+    compute the Pareto frontier of distance vs workload
+    """
+    n_offices = len(srs)
+    all_solutions = []
+    
+    # Iterate over possible number of relocations: 0, 1, 2, ..., n_offices
+    for num_relocated in range(n_offices + 1):
+        print(f"Computing solutions with {num_relocated} relocated offices...")
+        
+        # Number of offices to keep at initial locations
+        offices_kept = n_offices - num_relocated
+        
+        # Solve bi-objective for this relocation level
+        # Vary alpha to generate Pareto frontier
+        for alpha in np.linspace(0, 1, 15):
+            m = gp.Model(f"ThreeObj_Reloc{num_relocated}_Alpha{alpha:.2f}")
+            m.setParam('OutputFlag', 0)
+            
+            x = m.addVars(bricks, bricks, vtype=GRB.BINARY, name="x")
+            y = m.addVars(bricks, vtype=GRB.BINARY, name="y")
+            wm = m.addVar(vtype=GRB.CONTINUOUS, name="wm")
+            
+            # Standard constraints (same as bi-objective model)
+            m.addConstrs((x.sum(i, '*') == 1 for i in bricks))
+            m.addConstr(y.sum('*') == n_offices)
+            m.addConstrs((x[i, j] <= y[j] for i in bricks for j in bricks))
+            
+            # Workload tracking
+            M = sum(workload.values()) + 1
+            for j in bricks:
+                office_workload = gp.quicksum(workload[i] * x[i, j] 
+                                             for i in bricks)
+                m.addConstr(wm >= office_workload - M * (1 - y[j]))
+            
+            # EPSILON CONSTRAINT: Exactly 'offices_kept' at initial locations
+            m.addConstr(
+                gp.quicksum(y[j] for j in initial_offices) == offices_kept,
+                name="RelocationConstraint"
+            )
+            
+            # Bi-objective: distance + workload
+            distance_obj = gp.quicksum(distances[i, j] * x[i, j] 
+                                      for i in bricks for j in bricks)
+            obj = alpha * (distance_obj / 20) + (1 - alpha) * wm
+            m.setObjective(obj, GRB.MINIMIZE)
+            
+            m.optimize()
+            
+            if m.status == GRB.OPTIMAL:
+                solution = {
+                    'num_relocated': num_relocated,
+                    'distance': sum(distances[i,j] * x[i,j].X 
+                                   for i in bricks for j in bricks),
+                    'max_workload': wm.X,
+                    'offices': [j for j in bricks if y[j].X > 0.5],
+                    'alpha': alpha
+                }
+                all_solutions.append(solution)
+    
+    return all_solutions
 ```
 
-For the 22×4 instance, this yields 484 binary x variables + 22 binary y variables + 1 continuous wm variable = 507 variables total, within license limits.
+<div style="page-break-after: always;"></div>
 
 ### 5.2 Multi-Objective Approach: Weighted Sum
+
+We combine distance and workload objectives using weighted sum method:
 
 We combine distance and workload objectives:
 ```
@@ -423,7 +961,6 @@ On a normalized 0-1 scale:
 - Workload (red line): Relatively flat for α > 0.3, sharp increase only at α=1.0
 - Distance (blue line): Smooth monotonic decrease throughout
 - Optimal range: α ∈ [0.3, 0.5] balances both objectives without extreme values
-<div style="page-break-after: always;"></div>
 
 ### 5.4 Practical Recommendations
 
