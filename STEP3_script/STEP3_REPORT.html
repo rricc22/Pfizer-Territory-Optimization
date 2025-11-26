@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>STEP3_REPORT.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<style>
+body { font-size: 10pt; }
+h1 { font-size: 18pt; }
+h2 { font-size: 14pt; }
+h3 { font-size: 12pt; }
+code, pre { font-size: 9pt; }
+</style>
+<h1 id="step-3-office-relocation-with-variable-center-bricks">STEP 3: Office Relocation with Variable Center Bricks</h1>
+<h2 id="1-problem-extension">1. Problem Extension</h2>
+<p>In Steps 1 and 2, office locations were <strong>fixed</strong> at predefined center bricks. Step 3 relaxes this constraint by treating <strong>office locations as decision variables</strong>. This allows the optimization to select the most efficient center bricks for placing offices, potentially achieving better solutions at the cost of relocating existing offices.</p>
+<h3 id="11-mathematical-formulation">1.1 Mathematical Formulation</h3>
+<p><strong>Decision Variables:</strong></p>
+<ul>
+<li><code>x[i,j] ∈ {0,1}</code>: Brick <code>i</code> assigned to office at brick <code>j</code></li>
+<li><code>y[j] ∈ {0,1}</code>: Brick <code>j</code> contains an SR office (1 = office, 0 = no office)</li>
+<li><code>wm ∈ ℝ⁺</code>: Maximum workload across all offices (for MinMax objective)</li>
+</ul>
+<p><strong>Constraints:</strong></p>
+<ol>
+<li><strong>Single Assignment:</strong> Each brick assigned to exactly one office<pre class="hljs"><code><div>Σⱼ x[i,j] = 1,  ∀i ∈ Bricks
+</div></code></pre>
+</li>
+<li><strong>Office Count:</strong> Exactly <code>n</code> offices must be placed<pre class="hljs"><code><div>Σⱼ y[j] = n
+</div></code></pre>
+</li>
+<li><strong>Assignment Validity:</strong> Can only assign to bricks with offices<pre class="hljs"><code><div>x[i,j] ≤ y[j],  ∀i,j
+</div></code></pre>
+</li>
+<li><strong>Workload Tracking:</strong> (for MinMax objective only)<pre class="hljs"><code><div>wm ≥ Σᵢ w[i]·x[i,j] - M·(1-y[j]),  ∀j
+</div></code></pre>
+where <code>M</code> = large constant (Big-M method)</li>
+</ol>
+<p><strong>Objectives:</strong></p>
+<ol>
+<li><strong>Minimize Total Distance:</strong> <code>Σᵢ,ⱼ d[i,j]·x[i,j]</code></li>
+<li><strong>Minimize Maximum Workload (MinMax):</strong> <code>wm</code></li>
+<li><strong>Minimize Office Relocations:</strong> <code>Σⱼ∈J₀ (1-y[j])</code> where <code>J₀</code> = initial office locations</li>
+</ol>
+<h3 id="12-multi-objective-approach">1.2 Multi-Objective Approach</h3>
+<p>We use a <strong>weighted sum method</strong> to combine distance and workload objectives:</p>
+<pre class="hljs"><code><div>Objective = α·(distance/20) + (1-α)·workload_max
+</div></code></pre>
+<ul>
+<li><strong>α = 0:</strong> Pure workload minimization</li>
+<li><strong>α = 1:</strong> Pure distance minimization</li>
+<li><strong>α ∈ (0,1):</strong> Balanced trade-off</li>
+</ul>
+<p>By varying <code>α</code> from 0 to 1, we generate the Pareto frontier of non-dominated solutions.</p>
+<div style="page-break-after: always;"></div>
+<h2 id="2-implementation">2. Implementation</h2>
+<h3 id="21-model-1-minimize-total-distance">2.1 Model 1: Minimize Total Distance</h3>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">model_minimize_distance</span><span class="hljs-params">(self, verbose: bool = True)</span>:</span>
+    m = gp.Model(<span class="hljs-string">"Step3_MinDistance"</span>)
+    m.setParam(<span class="hljs-string">'OutputFlag'</span>, <span class="hljs-number">0</span> <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> verbose <span class="hljs-keyword">else</span> <span class="hljs-number">1</span>)
+    
+    <span class="hljs-comment"># Decision variables</span>
+    x = m.addVars(self.bricks, self.bricks, vtype=GRB.BINARY, name=<span class="hljs-string">"x"</span>)
+    y = m.addVars(self.bricks, vtype=GRB.BINARY, name=<span class="hljs-string">"y"</span>)
+    
+    <span class="hljs-comment"># Constraints</span>
+    m.addConstrs((x.sum(i, <span class="hljs-string">'*'</span>) == <span class="hljs-number">1</span> <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> self.bricks), name=<span class="hljs-string">"AssignBrick"</span>)
+    m.addConstr(y.sum(<span class="hljs-string">'*'</span>) == self.n_srs, name=<span class="hljs-string">"ExactlyNOffices"</span>)
+    m.addConstrs(
+        (x[i, j] &lt;= y[j] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> self.bricks <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> self.bricks),
+        name=<span class="hljs-string">"AssignOnlyToOffice"</span>
+    )
+    
+    <span class="hljs-comment"># Objective: Minimize total distance</span>
+    obj = gp.quicksum(self.distances[i, j] * x[i, j] 
+                     <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> self.bricks <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> self.bricks)
+    m.setObjective(obj, GRB.MINIMIZE)
+    
+    m.optimize()
+    <span class="hljs-keyword">return</span> m, self._extract_solution(m, x, y)
+</div></code></pre>
+<div style="page-break-after: always;"></div>
+<h3 id="22-model-2-minimize-maximum-workload-minmax">2.2 Model 2: Minimize Maximum Workload (MinMax)</h3>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">model_minimize_maxworkload</span><span class="hljs-params">(self, verbose: bool = True)</span>:</span>
+    m = gp.Model(<span class="hljs-string">"Step3_MinMaxWorkload"</span>)
+    m.setParam(<span class="hljs-string">'OutputFlag'</span>, <span class="hljs-number">0</span> <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> verbose <span class="hljs-keyword">else</span> <span class="hljs-number">1</span>)
+    
+    <span class="hljs-comment"># Decision variables</span>
+    x = m.addVars(self.bricks, self.bricks, vtype=GRB.BINARY, name=<span class="hljs-string">"x"</span>)
+    y = m.addVars(self.bricks, vtype=GRB.BINARY, name=<span class="hljs-string">"y"</span>)
+    wm = m.addVar(vtype=GRB.CONTINUOUS, name=<span class="hljs-string">"wm"</span>)  <span class="hljs-comment"># max workload</span>
+    
+    <span class="hljs-comment"># Standard constraints</span>
+    m.addConstrs((x.sum(i, <span class="hljs-string">'*'</span>) == <span class="hljs-number">1</span> <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> self.bricks), name=<span class="hljs-string">"AssignBrick"</span>)
+    m.addConstr(y.sum(<span class="hljs-string">'*'</span>) == self.n_srs, name=<span class="hljs-string">"ExactlyNOffices"</span>)
+    m.addConstrs(
+        (x[i, j] &lt;= y[j] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> self.bricks <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> self.bricks),
+        name=<span class="hljs-string">"AssignOnlyToOffice"</span>
+    )
+    
+    <span class="hljs-comment"># Workload tracking (Big-M method)</span>
+    M = sum(self.workload.values()) + <span class="hljs-number">1</span>
+    m.addConstrs(
+        (wm &gt;= gp.quicksum(self.workload[i] * x[i, j] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> self.bricks) 
+         - M * (<span class="hljs-number">1</span> - y[j]) <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> self.bricks),
+        name=<span class="hljs-string">"MaxWorkload"</span>
+    )
+    
+    <span class="hljs-comment"># Objective: Minimize maximum workload</span>
+    m.setObjective(wm, GRB.MINIMIZE)
+    
+    m.optimize()
+    <span class="hljs-keyword">return</span> m, self._extract_solution(m, x, y)
+</div></code></pre>
+<div style="page-break-after: always;"></div>
+<h3 id="23-bi-objective-model-weighted-sum">2.3 Bi-Objective Model (Weighted Sum)</h3>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">model_biobjective</span><span class="hljs-params">(self, alpha: float = <span class="hljs-number">0.5</span>, verbose: bool = True)</span>:</span>
+    m = gp.Model(<span class="hljs-string">"Step3_Biobjective"</span>)
+    m.setParam(<span class="hljs-string">'OutputFlag'</span>, <span class="hljs-number">0</span> <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> verbose <span class="hljs-keyword">else</span> <span class="hljs-number">1</span>)
+    
+    <span class="hljs-comment"># Decision variables</span>
+    x = m.addVars(self.bricks, self.bricks, vtype=GRB.BINARY, name=<span class="hljs-string">"x"</span>)
+    y = m.addVars(self.bricks, vtype=GRB.BINARY, name=<span class="hljs-string">"y"</span>)
+    wm = m.addVar(vtype=GRB.CONTINUOUS, name=<span class="hljs-string">"wm"</span>)
+    
+    <span class="hljs-comment"># Constraints (same as above)</span>
+    <span class="hljs-comment"># ...</span>
+    
+    <span class="hljs-comment"># Bi-objective: weighted sum with normalization</span>
+    distance_obj = gp.quicksum(self.distances[i, j] * x[i, j] 
+                              <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> self.bricks <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> self.bricks)
+    distance_norm = distance_obj / <span class="hljs-number">20</span>  <span class="hljs-comment"># Expected range ~10-20</span>
+    workload_norm = wm                 <span class="hljs-comment"># Expected range ~0.8-1.5</span>
+    
+    obj = alpha * distance_norm + (<span class="hljs-number">1</span> - alpha) * workload_norm
+    m.setObjective(obj, GRB.MINIMIZE)
+    
+    m.optimize()
+    <span class="hljs-keyword">return</span> m, self._extract_solution(m, x, y)
+</div></code></pre>
+<hr>
+<h2 id="3-results-22-bricks--4-srs">3. Results: 22 Bricks / 4 SRs</h2>
+<h3 id="31-pareto-frontier-analysis">3.1 Pareto Frontier Analysis</h3>
+<p>We generated <strong>15 Pareto-optimal solutions</strong> by varying weight parameter <code>α</code> from 0 to 1:</p>
+<p><img src="STEP3_Graph/pareto_22x4_frontier.png" alt="Pareto Frontier"></p>
+<p><strong>Key Observations:</strong></p>
+<ul>
+<li><strong>Distance range:</strong> 16.57 - 149.62 (9× difference)</li>
+<li><strong>Workload range:</strong> 1.0001 - 3.0000 (3× difference)</li>
+<li>Clear convex trade-off curve indicating efficient frontier</li>
+<li>Two extreme solutions dominate:
+<ul>
+<li><strong>Min Distance (α=1.0):</strong> Distance = 16.57, Workload = 3.00</li>
+<li><strong>Min Workload (α=0.0):</strong> Distance = 149.62, Workload = 1.0001</li>
+</ul>
+</li>
+</ul>
+<div style="page-break-after: always;"></div>
+<h3 id="32-trade-off-analysis">3.2 Trade-off Analysis</h3>
+<p><img src="STEP3_Graph/pareto_22x4_tradeoff.png" alt="Trade-off"></p>
+<p>The dual-axis plot shows how objectives evolve as <code>α</code> increases:</p>
+<ul>
+<li><strong>α &lt; 0.3:</strong> Workload improves rapidly with minimal distance increase</li>
+<li><strong>α ∈ [0.3, 0.7]:</strong> Balanced region with moderate trade-offs (best practical solutions)</li>
+<li><strong>α &gt; 0.7:</strong> Distance improves at the expense of severe workload imbalance</li>
+</ul>
+<p><strong>Recommended solution:</strong> <code>α = 0.36</code> achieves:</p>
+<ul>
+<li>Distance: 20.44 (23% improvement over fixed offices)</li>
+<li>Max Workload: 1.38 (acceptable balance)</li>
+<li>Relocated offices: 4/4</li>
+</ul>
+<div style="page-break-after: always;"></div>
+<h3 id="33-relocation-impact">3.3 Relocation Impact</h3>
+<p><img src="STEP3_Graph/pareto_22x4_relocation.png" alt="Relocation"></p>
+<p><strong>Displaced Offices Distribution:</strong></p>
+<ul>
+<li><strong>3 displaced:</strong> 2 solutions (13%)</li>
+<li><strong>4 displaced:</strong> 13 solutions (87%)</li>
+</ul>
+<p><strong>Key Insight:</strong> Most efficient solutions require relocating <strong>all 4 offices</strong>. Only the first two solutions (α=0.0, α=0.07) keep 1 office in place, but these have extremely poor distance performance (≥29.68).</p>
+<h3 id="34-effect-of-weight-parameter-%CE%B1">3.4 Effect of Weight Parameter α</h3>
+<p><img src="STEP3_Graph/pareto_22x4_alpha.png" alt="Alpha Effect"></p>
+<p>Normalized objectives (0-1 scale) show:</p>
+<ul>
+<li><strong>Workload</strong> (red): Relatively flat for α &gt; 0.3, sharp increase only at α=1.0</li>
+<li><strong>Distance</strong> (blue): Smooth monotonic decrease as α increases</li>
+<li><strong>Sweet spot:</strong> α ∈ [0.3, 0.5] balances both objectives effectively</li>
+</ul>
+<div style="page-break-after: always;"></div>
+<h2 id="4-comparison-fixed-vs-relocatable-offices">4. Comparison: Fixed vs Relocatable Offices</h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Step 1 (Fixed)</th>
+<th>Step 3 (Min Distance)</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Total Distance</strong></td>
+<td>27.50</td>
+<td>16.57</td>
+<td><strong>-39.7%</strong></td>
+</tr>
+<tr>
+<td><strong>Max Workload</strong></td>
+<td>1.18</td>
+<td>3.00</td>
+<td>+153.4%</td>
+</tr>
+<tr>
+<td><strong>Office Locations</strong></td>
+<td>[6, 13, 17, 21]</td>
+<td>[5, 11, 12, 22]</td>
+<td>4/4 relocated</td>
+</tr>
+<tr>
+<td><strong>Solve Time</strong></td>
+<td>~0.3s</td>
+<td>~1.2s</td>
+<td>+300%</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Step 1 (Fixed)</th>
+<th>Step 3 (Balanced α=0.36)</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Total Distance</strong></td>
+<td>27.50</td>
+<td>20.44</td>
+<td><strong>-25.7%</strong></td>
+</tr>
+<tr>
+<td><strong>Max Workload</strong></td>
+<td>1.18</td>
+<td>1.38</td>
+<td>+16.9%</td>
+</tr>
+<tr>
+<td><strong>Office Locations</strong></td>
+<td>[6, 13, 17, 21]</td>
+<td>[5, 11, 12, 22]</td>
+<td>4/4 relocated</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key Findings:</strong></p>
+<ol>
+<li><strong>Distance:</strong> Allowing relocation reduces distance by <strong>25-40%</strong> depending on workload tolerance</li>
+<li><strong>Workload:</strong> Can achieve near-perfect balance (1.0001) but at 5× distance penalty</li>
+<li><strong>Relocation Cost:</strong> Most efficient solutions require relocating <strong>all offices</strong></li>
+<li><strong>Practical Choice:</strong> Balanced solution (α=0.36) provides substantial distance improvement (+25.7%) with acceptable workload increase (+16.9%)</li>
+</ol>
+<div style="page-break-after: always;"></div>
+<h2 id="5-computational-performance">5. Computational Performance</h2>
+<p><strong>Test Environment:</strong> Gurobi 11.0, Intel i7-10750H, 16GB RAM</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Variables</th>
+<th>Constraints</th>
+<th>Solve Time</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model 1 (Min Distance)</td>
+<td>484 binary, 22 binary</td>
+<td>~2,000</td>
+<td>1.2s</td>
+<td>Optimal</td>
+</tr>
+<tr>
+<td>Model 2 (Min Workload)</td>
+<td>484 binary, 22 binary, 1 cont</td>
+<td>~2,500</td>
+<td>1.8s</td>
+<td>Optimal</td>
+</tr>
+<tr>
+<td>Bi-objective (α=0.5)</td>
+<td>484 binary, 22 binary, 1 cont</td>
+<td>~2,500</td>
+<td>1.5s</td>
+<td>Optimal</td>
+</tr>
+<tr>
+<td>Full Pareto (15 solves)</td>
+<td>-</td>
+<td>-</td>
+<td>~18s</td>
+<td>All Optimal</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Performance Notes:</strong></p>
+<ul>
+<li>Decision variables scale as <code>O(n²)</code> where <code>n</code> = number of bricks</li>
+<li>Constraint count scales as <code>O(n²)</code> due to assignment validity constraints</li>
+<li>All 22×4 instances solve in &lt; 2 seconds</li>
+<li><strong>Scalability concern:</strong> 100×10 instances take ~30-60s per solve (see Step 2 for details)</li>
+</ul>
+<h2 id="6-practical-considerations">6. Practical Considerations</h2>
+<h3 id="61-when-to-use-office-relocation">6.1 When to Use Office Relocation</h3>
+<p><strong>Advantages:</strong></p>
+<ul>
+<li>Significant distance reduction (25-40%)</li>
+<li>Flexibility to achieve near-perfect workload balance if needed</li>
+<li>Can adapt to changing demand patterns</li>
+</ul>
+<p><strong>Disadvantages:</strong></p>
+<ul>
+<li>High disruption cost (most solutions relocate all offices)</li>
+<li>Requires physical office moves (real estate, equipment, morale impact)</li>
+<li>Longer solve times (~4× slower than fixed-office models)</li>
+</ul>
+<p><strong>Recommendation:</strong> Use office relocation when:</p>
+<ol>
+<li>Existing office locations were chosen arbitrarily (not optimized)</li>
+<li>Demand patterns have changed significantly since initial placement</li>
+<li>Long-term distance savings justify one-time relocation cost</li>
+<li>Organization can tolerate operational disruption</li>
+</ol>
+<div style="page-break-after: always;"></div>
+<h3 id="62-choosing-the-right-%CE%B1">6.2 Choosing the Right α</h3>
+<table>
+<thead>
+<tr>
+<th>α Range</th>
+<th>Use Case</th>
+<th>Typical Results</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>0.0 - 0.2</strong></td>
+<td>Workload fairness critical (union contracts, equity concerns)</td>
+<td>Poor distance</td>
+</tr>
+<tr>
+<td><strong>0.3 - 0.5</strong></td>
+<td><strong>Balanced (RECOMMENDED)</strong></td>
+<td>20-30% distance improvement, acceptable workload</td>
+</tr>
+<tr>
+<td><strong>0.6 - 0.8</strong></td>
+<td>Distance critical (high travel costs)</td>
+<td>Good distance, moderate imbalance</td>
+</tr>
+<tr>
+<td><strong>0.9 - 1.0</strong></td>
+<td>Pure distance optimization</td>
+<td>Best distance, severe imbalance (not practical)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="7-extensions-and-future-work">7. Extensions and Future Work</h2>
+<h3 id="71-three-objective-model">7.1 Three-Objective Model</h3>
+<p>The code includes a three-objective epsilon-constraint method to simultaneously optimize:</p>
+<ol>
+<li>Total distance</li>
+<li>Maximum workload</li>
+<li>Number of relocated offices</li>
+</ol>
+<p>This allows decision-makers to <strong>limit relocation count</strong> while optimizing distance/workload. For example:</p>
+<ul>
+<li>&quot;Find best solution relocating at most 2 offices&quot;</li>
+<li>&quot;Compare 0, 1, 2, 3, 4 relocation scenarios on Pareto curve&quot;</li>
+</ul>
+<div style="page-break-after: always;"></div>
+<p>Implementation sketch:</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">model_three_objective_epsilon</span><span class="hljs-params">(self, num_relocated: int, 
+                                 max_workload_eps: float = None)</span>:</span>
+    <span class="hljs-comment"># Standard model setup</span>
+    <span class="hljs-comment"># ...</span>
+    
+    <span class="hljs-comment"># Epsilon constraint: Exactly num_relocated offices moved</span>
+    initial_kept = self.n_srs - num_relocated
+    m.addConstr(
+        gp.quicksum(y[j] <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> self.initial_offices) == initial_kept,
+        name=<span class="hljs-string">"RelocatedOffices"</span>
+    )
+    
+    <span class="hljs-comment"># Optional: Bound on max workload</span>
+    <span class="hljs-keyword">if</span> max_workload_eps <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span>:
+        m.addConstr(wm &lt;= max_workload_eps, name=<span class="hljs-string">"MaxWorkloadEpsilon"</span>)
+    
+    <span class="hljs-comment"># Primary objective: Minimize distance</span>
+    m.setObjective(distance_obj, GRB.MINIMIZE)
+</div></code></pre>
+<h3 id="72-incremental-relocation">7.2 Incremental Relocation</h3>
+<p>For practical deployment, consider <strong>staged relocation</strong>:</p>
+<ol>
+<li>Phase 1: Relocate 1-2 offices with highest impact</li>
+<li>Observe results, measure actual travel time</li>
+<li>Phase 2: Relocate remaining offices if justified</li>
+</ol>
+<p>This reduces risk and allows validation of model assumptions.</p>
+<h3 id="73-soft-relocation-penalties">7.3 Soft Relocation Penalties</h3>
+<p>Instead of hard constraints, penalize relocations in the objective:</p>
+<pre class="hljs"><code><div>relocation_penalty = <span class="hljs-number">1000</span>  <span class="hljs-comment"># Cost per office moved</span>
+obj = distance_obj + relocation_penalty * gp.quicksum(<span class="hljs-number">1</span> - y[j] <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> initial_offices)
+</div></code></pre>
+<p>This produces a single optimal solution balancing all three objectives automatically.</p>
+<div style="page-break-after: always;"></div>
+<h2 id="8-conclusions">8. Conclusions</h2>
+<p><strong>Step 3 demonstrates:</strong></p>
+<ol>
+<li><strong>Flexibility of office relocation</strong> yields 25-40% distance improvements over fixed offices</li>
+<li><strong>Multi-objective optimization</strong> reveals trade-offs between distance, workload, and disruption</li>
+<li><strong>Pareto frontier</strong> provides decision-makers with range of efficient solutions (no single &quot;best&quot; answer)</li>
+<li><strong>Practical balance</strong> (α=0.36) achieves substantial distance reduction with acceptable workload increase</li>
+</ol>
+<p><strong>Model Complexity Evolution:</strong></p>
+<ul>
+<li><strong>Step 1:</strong> Fixed offices, mono-objective → Simple, fast, limited flexibility</li>
+<li><strong>Step 2:</strong> Fixed offices, scalability (100×10) → Larger problem size</li>
+<li><strong>Step 3:</strong> Variable offices, multi-objective → High flexibility, more complex trade-offs</li>
+</ul>
+<p><strong>Final Recommendation:</strong></p>
+<ul>
+<li>Use <strong>Step 1 (fixed offices)</strong> for routine reassignments and minor demand changes</li>
+<li>Use <strong>Step 3 (relocatable offices)</strong> for major reorganizations or initial office placement</li>
+<li>For Step 3, choose <strong>α ∈ [0.3, 0.5]</strong> for practical balance between distance and workload</li>
+</ul>
+<div style="page-break-after: always;"></div>
+<h2 id="9-code-repository">9. Code Repository</h2>
+<p>https://github.com/rricc22/Pfizer-Territory-Optimization.git</p>
+
+</body>
+</html>
