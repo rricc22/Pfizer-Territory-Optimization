@@ -359,8 +359,4 @@ This produces a single optimal solution balancing all three objectives automatic
 - Use **Step 3 (relocatable offices)** for major reorganizations or initial office placement
 - For Step 3, choose **α ∈ [0.3, 0.5]** for practical balance between distance and workload
 
-<div style="page-break-after: always;"></div>
-
-## 9. Code Repository
-
 https://github.com/rricc22/Pfizer-Territory-Optimization.git

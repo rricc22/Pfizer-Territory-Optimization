@@ -1016,6 +1016,7 @@ On a normalized 0-1 scale:
 - Use: Phase 2 scalability models (100×10)
 - Reason: Confirms real-world applicability at district/regional scale
 - Example: National rollout planning
+<div style="page-break-after: always;"></div>
 
 ### 6.3 Workload Flexibility Guidance
 
@@ -1067,27 +1068,6 @@ Long-Term Strategy (Major Reorganization):
 - If current office locations are suboptimal (not previously optimized), conduct Phase 3 office relocation analysis
 - Select balanced solution (α=0.36) achieving 25% distance reduction with acceptable workload (max 1.38)
 - Implement staged relocation (1-2 offices per quarter) to manage change and validate assumptions
-
-<div style="page-break-after: always;"></div>
-
-### 7.3 Model Limitations and Extensions
-
-Current Limitations:
-- Distance metric is Euclidean; real travel time depends on road networks, traffic
-- Disruption metric counts reassignments but not SR-MD relationship strength
-- Workload measured by index values; actual time requirements may vary
-- Static model; demand and relationships evolve over time
-- No consideration of SR-specific skills, language, or customer preferences
-
-Potential Extensions:
-1. Time-dependent travel distances incorporating traffic patterns
-2. Stochastic demand scenarios with robust optimization
-3. Dynamic models with periodic reassignment and relationship decay
-4. Network distances using actual road maps (OpenStreetMap integration)
-5. SR preference constraints and specialization requirements
-6. Multi-period planning with relationship quality dynamics
-
-
 
 <div style="page-break-after: always;"></div>
 
