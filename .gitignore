@@ -72,7 +72,6 @@ scalability_results.csv
 pareto_summary.csv
 
 # PNG outputs (visualizations)
-*.png
 !docs/*.png
 !images/*.png
 
